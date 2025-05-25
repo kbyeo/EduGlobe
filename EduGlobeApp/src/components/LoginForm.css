@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Archive';
+  src: url('../assets/fonts/Archive-Regular16045908820454204652.d67f.fd616ed261fdc236ca4db06cde59f2b2.ttf') format('truetype');
+  font-weight: 100; /* Adjust for bold or light variations */
+  font-style: normal;
+}
+
+.login-container {
+    width: 430px;
+    background-color: #19002f;
+    padding: 30px;
+    border-radius: 20px;
+
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.logos{
+    width: 135px;
+    height: auto;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+}
+
+.text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px;
+
+}
+.EduGlobe-header {
+    color: #e7cdea;
+    font-family: "Archive", sans-serif;
+    font-size: 50px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.caption{
+    color: #a6a4f5;
+    font-size: 22px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+}
+
+
+
