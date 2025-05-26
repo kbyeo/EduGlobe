@@ -3,16 +3,12 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import './LoginForm.css';
 import Logo from '../assets/images/EduGlobeLogoGradient.png';
+import supabase from "../supabaseClient";
 
 
 
 function LogInForm() {
 
-
-    const supabase = createClient(
-        'https://osoyhekwotdpazclekmu.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zb3loZWt3b3RkcGF6Y2xla211Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNDY2ODksImV4cCI6MjA2MzcyMjY4OX0.ACtumr_cCW2r4fE5Kus_PCdiIHhDueiMPl_YR_0qJQM'
-        );
 
 
     return (
@@ -22,7 +18,7 @@ function LogInForm() {
 
                 <div className="text-container">
                     <p className="EduGlobe-header">NUS EduGlobe</p>
-                    <p className="caption">Exchange made Easier.</p>
+                    <p className="caption">Exchange made easier.</p>
                 </div>
             </div>
 
@@ -89,6 +85,7 @@ function LogInForm() {
                             }}
                     providers={[]}
                 />
+
 
         </div>
 

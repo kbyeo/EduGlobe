@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Archive';
+  src: url('../assets/fonts/Archive-Regular16045908820454204652.d67f.fd616ed261fdc236ca4db06cde59f2b2.ttf') format('truetype');
+  font-weight: 100; /* Adjust for bold or light variations */
+  font-style: normal;
+}
+
+.profile-creation-container{
+    width: 430px;
+    background-color: #19002f;
+    padding: 30px;
+    border-radius: 20px;
+
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.logos{
+    width: 135px;
+    height: auto;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+}
+
+.text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px;
+
+}
+.EduGlobe-header {
+    color: #e7cdea;
+    font-family: "Archive", sans-serif;
+    font-size: 50px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.caption{
+    color: #a6a4f5;
+    font-size: 22px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.input-form{
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    padding: 0px;
+    border-radius: 6px;
+}
+
+.setup-text {
+    font-size: 23px;
+    color: #e7cdea;
+}
+
+.input-form .field {
+  width: 390px;
+  padding: 17px 18px;
+  margin-bottom: 22px;
+  font-size: 19px;
+  border: 3px solid #976efe;
+  border-radius: 6px;
+  background-color: #11103c;
+  color: #e7cdea;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.input-form .field:hover {
+  border: 3px solid #e7cdea;
+}
+
+.input-form .field:focus {
+  border: 3px solid #e7cdea;
+}
+
+.input-form .field::placeholder {
+  font-family: 'Poppins', sans-serif;
+  color: #a6a4f5;
+}
+
+
+.submit-button {
+  width: 432px;
+  padding: 12px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  color: #fef0ff;
+  background-color: #8c52ff;
+  border: 3px solid #976efe;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #5400a1;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
