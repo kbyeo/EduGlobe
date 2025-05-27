@@ -3,13 +3,13 @@ import Logo from '../assets/images/EduGlobeLogoGradient.png';
 import './ProfileCreation.css';
 import supabase from "../supabaseClient";
 
-function ProfileCreation({ id, setId }) {
+function ProfileCreation({ id, setId, onProfileUpdated }) {
     const [displayName, setDisplayName] = useState("");
     const [yearOfStudy, setYearOfStudy] = useState("");
     const [courseOfStudy, setCourseOfStudy] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!displayName || !yearOfStudy || !courseOfStudy) {
             alert("All fields are required!");
@@ -17,8 +17,13 @@ function ProfileCreation({ id, setId }) {
         }
         setIsProcessing(true);
 
-    // You can add additional logic, like sending data to an API
-        updateProfile();
+        const updated = await updateProfile();
+        //await because we only want to call onProfileUpdated AFTER
+        //asynchronous update queries are done
+        if (updated && onProfileUpdated) {
+            onProfileUpdated();
+            console.log("Telling dashboard that update is done");
+        }
 
         setIsProcessing(false);
 
@@ -36,30 +41,23 @@ function ProfileCreation({ id, setId }) {
         if (error) {
             console.error("Error updating profile: ", error.message);
             alert("Something went when updating, please try again!")
-            return;
+            return false;
         }
         if (!error) {
             setDisplayName("");
             setYearOfStudy("");
             setCourseOfStudy("");
             console.log(`updated, displayName: ${displayName},
-                        year: ${yearOfStudy}, course: ${courseOfStudy}`);
+                        year: ${yearOfStudy}, course: ${courseOfStudy}
+                        `);
+            return true;
         }
     }
-    //this handles log outs
-    const handleLogout = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          console.error("Error logging out: ", error.message);
-        } else {
-          // Clear the user ID which will be interpreted as logged out
-          setId(null);
-        }
-    };
 
 
 
     return (
+
             <div className="profile-creation-container">
                 <div className="header">
                     <img src={Logo} className="logos" alt="NUS EduGlobe logo"/>
@@ -93,9 +91,9 @@ function ProfileCreation({ id, setId }) {
                     </form>
 
                 </div>
-                <button style={{color:"black",}} onClick={handleLogout}> Log out?.</button>
 
             </div>
+
 
             );
 }

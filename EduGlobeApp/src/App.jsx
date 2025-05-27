@@ -59,12 +59,8 @@ function App() {
 
     if (!session) {
         return <LoginPage/>
-    }
-    if (firstSignin) {
-        //this is a new user, direct to create account
-        return <ProfileCreation id={id} setId={setId}/>;
     } else {
-        //not a new user, straight to dashboard
+        //straight to dashboard which handles new user checks
         return <Dashboard id={id} setId={setId}/>;
     }
 

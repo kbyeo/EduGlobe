@@ -6,13 +6,16 @@
   font-weight: 100; /* Adjust for bold or light variations */
   font-style: normal;
 }
+body{
+    overflow: hidden;
+}
 
 .profile-creation-container{
     width: 430px;
     background-color: #19002f;
     padding: 30px;
     border-radius: 20px;
-
+    border: 3px solid #6d6af5;
 }
 
 .header{

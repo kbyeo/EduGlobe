@@ -1,0 +1,28 @@
+.container {
+    position: relative;
+
+}
+
+.profile-setup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.dashboard-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #020023;
+}
+
+.dashboard-content {
+    font-size: 24px;
+
+}
