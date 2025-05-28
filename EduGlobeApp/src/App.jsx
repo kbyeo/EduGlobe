@@ -28,14 +28,18 @@ function App() {
       setSession(session);
       if (session) {
         setId(session.user.id); // Update the user ID
-        console.log(`Authentication state changed. User ID: ${session.user.id}`);
+        console.log(`Authentication state changed. User ID: ${session.user.id} signed in`);
       } else {
         setId(null); // Clear the user ID if logged out
         console.log("User signed out.");
       }
     });
     // Cleanup the subscription on unmount
-    return () => subscription.unsubscribe();
+    return () => {
+        console.log("unsubscribing from auth");
+        subscription.unsubscribe();
+
+        }
   }, [supabase]);
 
   // When id is set, fetch the first_signin value from the userprofiles table
