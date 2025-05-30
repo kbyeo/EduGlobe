@@ -92,6 +92,10 @@
   transition: ease 0.2s;
 }
 
+.logout {
+    margin-top: 160px;
+}
+
 .nav-links li:hover {
   color:#a6a4f5;
 }
@@ -270,7 +274,7 @@
   border: 1.6px solid #6d6af5;
   border-radius: 14.4px;
   text-align: center;
-  height: 152px;
+  height: auto;
   background-color: #000000;
   color: #b9b8ff;
   font-size: 24px;
@@ -283,6 +287,7 @@
   margin-top: 0px;
    display: flex;
    justify-content: center;
+   margin-bottom: 41px;
 
 }
 
@@ -325,4 +330,141 @@
 .mapping-buttons .discover-button:hover {
   background-color: #43b8e1;
 
+}
+
+.mappings-table-container {
+  margin-top: 0px;
+  max-width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
+}
+/* Mappings Table */
+.mappings-table {
+  width: 100%;
+  border-collapse: collapse; /* Remove spacing between table cells */
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+}
+.mappings-table thead {
+  background-color: #231231;
+  color: #b9b8ff; /* White text color for the header */
+}
+.mappings-table th,
+.mappings-table td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #b9b8ff; /* Border around each cell */
+  font-size: 1.2rem;
+
+}
+.mappings-table tbody {
+  background-color: #131313;
+  transition: ease 0.5s;
+}
+
+.mappings-table tbody tr:hover {
+  background-color: #2d0058; /* Highlight row on hover */
+}
+.mappings-table th {
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+.mappings-table td {
+  color: #f8f8ff;
+}
+
+
+
+.post-table {
+    display: flex;
+    margin-top: 20px;
+
+
+
+}
+
+.delete-note {
+    font-size: 0.70em;
+    position: right;
+    margin-top: 0px;
+    margin-left: 5px;
+    color: #ce3551;
+
+}
+
+.mapping-buttons2 {
+  margin-top: 0px;
+   display: flex;
+   justify-content: center;
+
+}
+
+.mapping-buttons2 button {
+  padding: 8px 12px;
+  margin-right: 8px;
+  height: 44px;
+
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 17.6px;
+
+}
+.add-button1 {
+  background-color: #d1c4f5;
+   width: 128.8px;/* Placeholder color */
+   margin-top: 0px;
+   color: #211f75;
+   background-color: #b9b8ff;
+   transition: ease 0.2s;
+
+}
+.mapping-buttons2 .add-button1:hover {
+  background-color: #976efe;
+
+}
+
+.discover-button1 {
+  background-color: #c1f0fa; /* Placeholder color */
+  width: 222.4px;
+  margin-top: 0px;
+  color: #3f007a;
+  background-color: #96ddf4;
+  transition: ease 0.2s;
+  margin-left: 5px;
+}
+
+.mapping-buttons2 .discover-button1:hover {
+  background-color: #43b8e1;
+
+}
+/* Context Menu */
+.context-menu {
+  position: absolute;
+  background: #000000; /* Dark purple background */
+  color: #976efe;
+
+  z-index: 1000;
+  width: 100px;
+  font-size: 0.8em;
+}
+.context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.context-menu li {
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #976efe;
+  border-radius: 10px;
+
+}
+.context-menu li:hover {
+  color: #ce3551;
+  border: 1px solid #ce3551;
+
+  border-radius: 10px;
 }

@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Archive';
+  src: url('../assets/fonts/Archive-Regular16045908820454204652.d67f.fd616ed261fdc236ca4db06cde59f2b2.ttf') format('truetype');
+  font-weight: 100; /* Adjust for bold or light variations */
+  font-style: normal;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: red; /* Change color */
+  border-radius: 50%; /* Make it rounded */
+}
+/* Fullscreen overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the popup is on top */
+}
+/* Centered popup box */
+.popup-content {
+  background: #19002f; /* Neutral background for now */
+  border-radius: 30px;
+  width: 40%; /* Responsive sizing */
+  padding: 30px 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+/* Heading text */
+.mapping-heading {
+  font-size: 2.8rem;
+  font-family: 'Archive', sans-serif;
+  color: #e7cdea;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  text-align: center;
+
+}
+/* Description styling */
+.description {
+  color: #ce3551;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 17px;
+}
+
+
+.form-group-a {
+  flex: 1; /* All fields will evenly share the available width */
+  max-width: 33%; /* To keep fields proportional */
+}
+
+.form-group-a label {
+  display: block;
+  color: #b9b9b9;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.form-group label {
+  color: #b9b9b9;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+/* Inputs */
+.form-group-a input {
+  background-color: #11103c;
+  border: 2px solid #976efe;
+  border-radius: 5px;
+  color: #a6a4f5;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: ease 0.2s;
+}
+.form-group input {
+  background-color: #11103c;
+  border: 2px solid #976efe;
+  border-radius: 5px;
+  color: #a6a4f5;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: ease 0.2s;
+}
+.form-group input::placeholder {
+  color: #a6a4f5;
+}
+.form-group input:hover {
+  border: 2px solid #e7cdea;
+}
+.form-group input:focus {
+  border: 2px solid #e7cdea;
+}
+.form-group-a input:hover {
+  border: 2px solid #e7cdea;
+}
+.form-group-a input:focus {
+  border: 2px solid #e7cdea;
+}
+
+
+.form-group-a select {
+    padding: 8px;
+    width: 100%;
+    background-color: #11103c;
+    border: 2px solid #976efe;
+    border-radius: 5px;
+    color: #a6a4f5;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+  transition: ease 0.2s;
+}
+.form-group-a select:hover {
+    border: 2px solid #e7cdea;
+}
+
+/* Align "Start Date" and "End Date" fields side by side */
+.form-group-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.form-group-inline .form-group {
+  flex: 1; /* Ensures both fields take up equal space */
+}
+
+/* Button group styling */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 33px;
+  margin-bottom: 20px;
+}
+/* Confirm button styling */
+.confirm-button {
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background-color: #8c52ff;
+  color: #fef0ff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: ease 0.2s;
+}
+
+.confirm-button:hover {
+ background-color: #6a39ce;
+}
+/* Cancel button styling */
+.cancel-button {
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background-color: #6105b6;
+  color: #fef0ff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Add spacing between buttons */
+  transition: ease 0.2s;
+}
+
+.cancel-button:hover {
+ background-color: #490885;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #a6a4f5;
+  margin-right: 1px;
+  border-radius: 5px;; /* Make it rounded */
+  cursor: pointer;
+}
