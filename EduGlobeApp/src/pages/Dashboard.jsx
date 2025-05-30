@@ -136,7 +136,7 @@ function Dashboard({ id, setId }) {
                                            <span className="icon-chat">
                                                <img src={images.icon.msgIcon} alt="msg" />
                                            </span>
-                                           <span className="icon-favorite">
+                                           <span className="icon-favourite">
                                                <img src={images.icon.heartIcon} alt="heart" />
                                            </span>
                                            <span className="user-profile">

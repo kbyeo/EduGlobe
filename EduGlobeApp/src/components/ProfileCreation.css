@@ -8,6 +8,7 @@
 }
 body{
     overflow: hidden;
+
 }
 
 .profile-creation-container{
@@ -16,6 +17,7 @@ body{
     padding: 30px;
     border-radius: 20px;
     border: 3px solid #6d6af5;
+    transform: scale(0.9); /* Scales the page down to 80% */
 }
 
 .header{
