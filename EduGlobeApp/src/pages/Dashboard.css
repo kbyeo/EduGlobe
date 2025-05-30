@@ -94,10 +94,16 @@
 
 .logout {
     margin-top: 160px;
+    color: #b9b9b9;
 }
+
 
 .nav-links li:hover {
   color:#a6a4f5;
+}
+
+.nav-links .logout:hover {
+  color: #ce3551;
 }
 
 .onPage{
@@ -444,7 +450,7 @@
   position: absolute;
   background: #000000; /* Dark purple background */
   color: #976efe;
-
+  border-radius: 10px;
   z-index: 1000;
   width: 100px;
   font-size: 0.8em;
@@ -460,6 +466,7 @@
   text-align: center;
   border: 1px solid #976efe;
   border-radius: 10px;
+  transition: ease 0.3s;
 
 }
 .context-menu li:hover {

@@ -180,7 +180,7 @@ function Dashboard({ id, setId }) {
                                          </li>
 
                                          <li className="logout" onClick={handleLogout}>
-                                             <img src={images.unselected.settings} alt="settings logo" />
+                                             <img src={images.logout} alt="settings logo" />
                                              Logout
                                          </li>
 
