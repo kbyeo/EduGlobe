@@ -1,0 +1,187 @@
+import { chromium } from 'playwright';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+import fs from 'fs';
+
+dotenv.config({ path: 'supabaseStorage.env' });
+
+//supabase auth
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+//Time elapsed since Jan 1 1970 00:00 UTC, used to check how long the script has ran for
+const start = Date.now();
+
+//filename configuration
+const now = new Date();
+//pad the number with a 0 in front, example 5 -> 05
+const pad = (n) => n.toString().padStart(2, '0');
+
+const timestamp =
+  now.getFullYear() + '-' +
+  pad(now.getMonth() + 1) + '-' +
+  pad(now.getDate()) + '_' +
+  pad(now.getHours()) + '-' +
+  pad(now.getMinutes()) + '-' +
+  pad(now.getSeconds());
+
+//function to login and go to mappings page
+async function runScraper() {
+  //launches browswer and saves it as browser to use as a handle later
+  const browser = await chromium.launch({ headless: false, slowMo: 100 });
+  //creates a new isolated browser environment
+  const context = await browser.newContext({
+  //saved session to avoid MFA
+  storageState: './edurecAuth.json'
+  });
+
+  //creates a new tab
+  const page = await context.newPage();
+  
+  // disable timeouts globally for this script
+  page.setDefaultTimeout(0); 
+
+
+  // Login + navigation
+  await page.goto('https://myedurec.nus.edu.sg/psp/cs90prd/?cmd=login&languageCd=ENG&');
+  await page.locator('span').filter({ hasText: 'Please click here to login to' }).getByRole('link').click();
+
+  await page.waitForLoadState('networkidle');
+
+  //check if storage session does not exist or expired
+  const isLoginPage = await page.getByRole('textbox', { name: 'User Account' }).count() > 0;
+  console.log(isLoginPage);
+
+  if (isLoginPage) {
+    // Session expired or no cookie, write to file and exit early. 
+
+    // uploads a txt alert file to supabase bucket
+    const content = 'Your edurecAuth.json cookie has expired. Please refresh session.';
+    const fileName = `alerts/COOKIE_EXPIRED_${timestamp}.txt`;
+    const { data, error } = await supabase
+      .storage
+      .from('edurec-bucket')
+      .upload(fileName, content, {
+        contentType: 'text/plain',
+        upsert: true,
+      });
+    //checks if upload fails
+    if (error) {
+      console.error('Failed to upload alert to Supabase:', error.message);
+    } else {
+      console.log('Alert uploaded to Supabase storage:', data.path);
+    }
+       // stops execution of runScraper function
+      await browser.close();
+      return; 
+    }
+  
+  //Navigsting to EduRec mappings page  
+  await page.locator('#N_STDACAD_SHORTCUT').click();
+  await page.getByRole('link', { name: 'Global Education' }).click();
+
+  const mainFrame = page.frameLocator('iframe[title="Main Content"]');
+  await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
+  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+
+  const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
+
+  await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+
+  //function to download mapping from each faculty
+  async function downloadFacultyMappings(faculty) {
+    await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+    await ptModFrame.getByLabel('Search by:').selectOption('2');
+    await ptModFrame.getByRole('button', { name: 'Look Up' }).click();
+    await ptModFrame.getByRole('link', { name: faculty, exact: true }).click();
+    await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
+    await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
+
+    const downloadPromise = page.waitForEvent('download');
+    await mainFrame.getByRole('button', { name: 'Download Partner University' }).click();
+
+    const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
+    const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
+
+    const download = await downloadPromise;
+    const downloadPath = await download.path();
+
+    const fileName = `${timestamp}/${safeFileName}.xls`;
+    const fileBuffer = fs.readFileSync(downloadPath);
+    //uploads each xls file into the bucket in the folder 'name'
+    const { data, error } = await supabase
+      .storage
+      .from('edurec-bucket')
+      .upload(fileName, fileBuffer, {
+        contentType: 'application/vnd.ms-excel',
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Upload failed:', error.message);
+    } else {
+      console.log('Uploaded to Supabase:', data.path);
+    }
+  }
+
+  //get the number of faculties in the table
+  await ptModFrame.locator('tbody tr td span[id^="RESULT4$"]').first().waitFor();
+  const facultyCount = await ptModFrame.locator('tbody tr td span[id^="RESULT4$"]').count();
+  console.log('Number of faculties found:', facultyCount);
+  //store all the faculties listed in an array from the table
+  const facultyNames = [];
+  for (let i = 0; i < facultyCount; i++) {
+    const facultyLocator = ptModFrame.locator(`tbody tr td span[id="RESULT4$${i}"]`);
+    const name = await facultyLocator.innerText();
+    //append
+    facultyNames.push(name);
+  }
+
+  await page.getByRole('button', { name: 'Close' }).click();
+  //loop through and download the xls file for each faculty with the function downloadFacultyMappings
+  for (const facultyName of facultyNames) {
+    console.log(`Processing faculty: ${facultyName}`);
+    await downloadFacultyMappings(facultyName);
+  }
+
+  await browser.close();
+  //uploads the timestamp of when the scraper last ran into the bucket as a txt file
+  const latest_update_timestamp = `latest_update_timestamp.txt`;
+  
+  const { data, error } = await supabase
+      .storage
+      .from('edurec-bucket')
+      .upload(latest_update_timestamp, timestamp, {
+        contentType: 'text/plain',
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Failed to upload alert to Supabase:', error.message);
+    } else {
+      console.log('Alert uploaded to Supabase storage:', data.path);
+    }
+
+  const end = Date.now();
+  //get how long the script ran for
+  const durationSeconds = ((end - start) / 1000).toFixed(2);
+  console.log(`Scraper ran for ${durationSeconds} seconds`);
+
+  // Returns the date for the output 
+  return timestamp.split('_')[0];
+}
+
+// Run the scraper if this file is called directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runScraper().then(date => {
+    console.log('Finished scrape for date:', date);
+    
+  }).catch(err => {
+    console.error('Scraper failed:', err);
+    process.exit(1);
+  });
+}
+
+//export to other files if needed
+export default runScraper;
