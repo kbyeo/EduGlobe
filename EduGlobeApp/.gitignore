@@ -22,13 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Playwright
-../PlayWright/node_modules/
-../PlayWright/test-results/
-../Playwright/playwright-report/
-../Playwright/blob-report/
-../Playwright/playwright/.cache/
-../Playwright/edurecOutlook.env
-../Playwright/supabaseStorage.env
-
