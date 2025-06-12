@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 //IMAGES
 import images from '../assets/images';
 import MappingForm from '../components/MappingForm.jsx';
-import supabase from "../supabaseClient";
+import supabaseClients from "../supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 import ProfileCreation from "../components/ProfileCreation.jsx"
 import LogoutButton from "../components/LogoutButton.jsx";
 import "./Dashboard.css";
@@ -20,6 +23,7 @@ function Dashboard({ id, setId }) {
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
     const [selectedMappingIndex, setSelectedMappingIndex] = useState(null);
+    const navigate = useNavigate();
 
 
 
@@ -129,6 +133,7 @@ function Dashboard({ id, setId }) {
                            ) : null}
                            {/* Dashboard content */}
 
+
                                <div className="dashboard-container">
                                      {/* Sidebar */}
                                      <aside className="sidebar">
@@ -149,7 +154,7 @@ function Dashboard({ id, setId }) {
                                              Dashboard
                                          </li>
 
-                                         <li>
+                                         <li onClick={() => navigate('/discover')} >
                                              <img src={images.unselected.discover} alt="discover logo" />
                                              Discover
                                          </li>

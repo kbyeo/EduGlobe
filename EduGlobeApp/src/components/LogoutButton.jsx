@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import supabase from "../supabaseClient";
+import supabaseClients from "../supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 
 function LogoutButton({ id, setId }) {
 

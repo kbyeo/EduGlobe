@@ -1,0 +1,462 @@
+/* Overall container for dashboard */
+.discover-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #020023;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 256px;
+  background-color: #000000; /* Placeholder color */
+  color: #ffffff;
+
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2); /* Subtle sidebar shadow */
+}
+
+.logo-section {
+  text-align: left;
+  margin-bottom: 36px;
+  margin-top: 8px;
+  display: flex;
+}
+
+.dlogo-text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px;
+
+
+}
+.dEduGlobe-header {
+    color: #e7cdea;
+    font-family: "Archive", sans-serif;
+    font-size: 28px;
+    margin: 0px;
+    padding: 0px;
+
+}
+
+.dcaption{
+    color: #a6a4f5;
+    font-size: 11.2px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.dlogo {
+  display: block;
+  width: 76px;
+  margin: 0 12px;
+}
+
+.nav-links {
+  list-style: none;
+  margin-left: 33.6px;
+  padding: 0;
+  margin-top: 16px;
+
+}
+
+.nav-links li {
+  margin-bottom: 36px;
+  font-size: 17.6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: ease 0.2s;
+}
+
+.logout {
+    margin-top: 160px;
+    color: #b9b9b9;
+}
+
+
+.nav-links li:hover {
+  color:#a6a4f5;
+}
+
+.nav-links .logout:hover {
+  color: #ce3551;
+}
+
+.onPage{
+    color: #a6a4f5;
+}
+
+.nav-links img {
+    width:22.4px;
+    height: 22.4px;
+    margin-right: 12px;
+    items-align: center;
+}
+
+/* Main content styles */
+.main-content {
+  flex-grow: 1;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.discheader {
+  display: flex;
+  height: 116px;
+  justify-content: space-between;
+  background-color: #03030d;
+  align-items: center;
+  margin-bottom: 16px;
+  margin-top: 0px;
+
+
+}
+
+.discover-title {
+  flex-shrink: 0;
+  font-size: 44.8px;
+  color: #b9b8ff;
+  margin-left: 22.4px;
+  padding-top: 14.4px;
+  min-width: 257.5px;
+
+}
+
+.search-bar {
+  position: relative;
+  flex: 1;
+  margin-left: 0px;
+  padding-top: 20.8px;
+  max-width: 240px;
+
+}
+
+.search-input {
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  text-align: left;
+  font-size: 14.4px;
+  background-color: #020023;
+  color: #b9b9b9;
+  height: 22.4px;
+  padding: 7.2px 37.6px;
+  border: 1.6px solid #a6a4f5;
+  border-radius: 4.8px;
+
+}
+
+.search-bar .search-icon {
+  position: absolute;
+  top: 67%;
+  left: 14.4px;
+  transform: translateY(-50%); /* Center vertically */
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar .search-icon img {
+  height: 18px;
+  width: 18px;
+  object-fit: contain;
+}
+
+.search-input::placeholder {
+  color: #b9b9b9;
+
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  padding-top: 20.8px;
+
+}
+
+.header-icons img {
+  height: 24px;
+  width: 26.4px;
+
+}
+
+.icon {
+  margin: 0px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+.icon-chat{
+    margin-right: 16px;
+    margin-top: 0.3px;
+    cursor: pointer;
+}
+
+.icon-favourite{
+    margin-right: 0px;
+    cursor: pointer;
+    margin-top: 0.3px;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+  min-width: 320px; /* Set a fixed or minimum width */
+  justify-content: flex-end; /* Align items to the right inside this box */
+
+}
+
+.user-name {
+  color: #fafafa;
+  font-family: "Poppins", sans-serif;
+  font-size: 22.4px;
+  margin-right: 12px;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Optional: adds "..." if name too long */
+  max-width: 152px; /* Controls how wide the name is allowed to stretch */
+  cursor: pointer;
+}
+
+.user-name:hover {
+  text-decoration: underline;
+  color:#a6a4f5;
+}
+
+.user-avatar {
+  border-radius: 50%;
+  height: 40px;
+  width: auto;
+  margin-right: 40px;
+}
+
+.user-profile img {
+  height: 48px;
+  width: auto;
+}
+
+.search-results {
+  padding-left: 20px;
+  padding-right: 16px;
+  width: 133.5vh;
+  border: 1.6px solid #6d6af5;
+  border-radius: 14.4px;
+  text-align: center;
+  height: auto;
+  background-color: #000000;
+  color: #b9b8ff;
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+.search-query {
+    text-align: left;
+    color: #e7cdea;
+    margin-top: 20px;
+    margin-bottom: 15px;
+
+}
+
+.search-query em {
+    color: #ffffff;
+}
+.results-table-container {
+  max-height: 65vh;
+
+  max-width: 140vh;
+  margin-top: 0px;
+  width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
+  margin-bottom: 10px;
+  border: 1px solid #6a39ce;
+
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse; /* Remove spacing between table cells */
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  table-layout: fixed;
+
+
+}
+
+.results-table th:nth-child(1),
+.results-table td:nth-child(1) {
+  width: 8%; /* Set Faculty column width */
+}
+.results-table th:nth-child(2),
+.results-table td:nth-child(2) {
+  width: 8%; /* Set Country column width */
+}
+.results-table th:nth-child(3),
+.results-table td:nth-child(3) {
+  width: 12%; /* Partner University column width */
+}
+.results-table th:nth-child(4),
+.results-table td:nth-child(4) {
+  width: 8%; /* PU Course Code column width */
+}
+.results-table th:nth-child(5),
+.results-table td:nth-child(5) {
+  width: 14%; /* PU Course column width */
+}
+.results-table th:nth-child(6),
+.results-table td:nth-child(6) {
+  width: 8%; /* PU Course Credits column width */
+}
+.results-table th:nth-child(7),
+.results-table td:nth-child(7) {
+  width: 14%; /* NUS Course Code column width */
+}
+.results-table th:nth-child(8),
+.results-table td:nth-child(8) {
+  width: 7%; /* NUS Course column width */
+}
+.results-table th:nth-child(9),
+.results-table td:nth-child(9) {
+  width: 8%; /* NUS Course Credits column width */
+}
+
+
+.results-table thead {
+  background-color: #231231;
+  color: #b9b8ff;
+}
+.results-table th,
+.results-table td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #b9b8ff; /* Border around each cell */
+  font-size: 0.8rem;
+
+  overflow: hidden; /* Hide overflowing content */
+  text-overflow: ellipsis; /* Add '...' for overflowing text */
+
+}
+.results-table tbody {
+  background-color: #131313;
+  transition: ease 1s;
+}
+
+.results-table tbody tr:hover {
+  background-color: #2d0058; /* Highlight row on hover */
+}
+.results-table th {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+.results-table td {
+  color: #f8f8ff;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin: 16px 0;
+  gap: 16px;
+  font-family: "Poppins", sans-serif;
+}
+.pagination-controls button {
+  padding: 8px 16px;
+  background-color: #3f007a;
+  color: #b9b8ff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: "Poppins", sans-serif;
+}
+.pagination-controls button:hover {
+  background-color: #6105b6;
+}
+.pagination-controls button:disabled {
+  background-color: #231231;
+  cursor: not-allowed;
+}
+.pagination-controls span {
+  font-size: 16px;
+  color: #b9b8ff;
+}
+
+.landing-page {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 60%;
+  color: #b9b8ff;
+}
+.landing-container {
+  text-align: center;
+  width: 60vh;
+  display: flex;
+  flex-direction: row;
+
+  max-width: 800px;
+}
+.landing-text {
+    padding: 0px;
+    text-align: left;
+}
+.Tlogo {
+  margin-top: 17px;
+  width: 200px;
+  height: 200px;
+}
+.landing-title {
+  font-size: 4rem;
+  font-style: italic;
+  color: #6d6af5;
+  margin-bottom: 0px;
+}
+.landing-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  margin-top: 0px;
+}
+.landing-search-bar {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+}
+.landing-search-input {
+  width: 80%;
+  margin-left: 40px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  color: #e8e8e8;
+  padding: 10px 40px;
+  border-radius: 7px;
+  border: 1px solid #6d6af5;
+  background-color: #000000;
+}
+.landing-search-input::focus {
+  border-radius: 7px;
+  border: 1px solid #96ddf4;
+}
+.landing-search-input::placeholder {
+  color: #b9b9b9;
+}
+.landing-search-bar .search-icon {
+  position: absolute;
+  top: 57%;
+  left: 54.4px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.landing-search-bar .search-icon img {
+  width: 20px;
+  height: 20px;
+}

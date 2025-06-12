@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './MappingForm.css';
-import supabase from "../supabaseClient";
+import supabaseClients from "../supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 
 function MappingForm({ closePopup, id, mappings, setMappings }) {
     const [country, setCountry] = useState("");

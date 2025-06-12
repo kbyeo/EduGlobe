@@ -18,7 +18,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75); /* Semi-transparent background */
+  background: rgba(0, 0, 0, 0.80); /* Semi-transparent background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,7 +26,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 /* Centered popup box */
 .popup-content {
-  background: #19002f; /* Neutral background for now */
+  background: #000000; /* Neutral background for now */
+  border: 2px solid #8c52ff;
   border-radius: 30px;
   width: 40%; /* Responsive sizing */
   padding: 30px 40px;

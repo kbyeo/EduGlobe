@@ -3,7 +3,9 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import './LoginForm.css';
 import Logo from '../assets/images/EduGlobeLogoGradient.png';
-import supabase from "../supabaseClient";
+import supabaseClients from "../supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 
 
 

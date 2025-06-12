@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import LoginPage from './pages/LoginPage.jsx';
 import ProfileCreation from "./components/ProfileCreation.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import supabase from "./supabaseClient";
+import Discover from "./pages/Discover.jsx";
+import supabaseClients from "./supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 
 
 function App() {
@@ -65,7 +69,16 @@ function App() {
         return <LoginPage/>
     } else {
         //straight to dashboard which handles new user checks
-        return <Dashboard id={id} setId={setId}/>;
+        return <Router>
+                     <Routes>
+                       {/* Once signed in, route within the app */}
+
+                       <Route path="/" element={<Dashboard id={id} setId={setId} />} />
+                       <Route path="/profile" element={<ProfileCreation userId={id} />} />
+                       <Route path="/discover" element={<Discover id={id} setId={setId} />} />
+
+                     </Routes>
+                   </Router>
     }
 
 

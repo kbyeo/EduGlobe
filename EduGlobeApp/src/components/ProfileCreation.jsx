@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import Logo from '../assets/images/EduGlobeLogoGradient.png';
 import './ProfileCreation.css';
-import supabase from "../supabaseClient";
+import supabaseClients from "../supabaseClient";
+// Destructure the instances
+const { supabase, mappings } = supabaseClients;
 
 function ProfileCreation({ id, setId, onProfileUpdated }) {
     const [displayName, setDisplayName] = useState("");

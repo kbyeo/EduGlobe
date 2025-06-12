@@ -1,4 +1,5 @@
 import Logo from './EduGlobeLogoGradient.png';
+import LogoTransparent from './Logo-transparent.png';
 import logout from './logout.png';
 
 import searchIcon from './search-icon.png';
@@ -23,6 +24,8 @@ import settingsUnselected from './settings-unselected.png';
 
 export default {
   Logo,
+
+  LogoTransparent,
 
   logout,
 
