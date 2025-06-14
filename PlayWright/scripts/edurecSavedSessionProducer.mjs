@@ -1,6 +1,6 @@
 import { chromium, expect } from "@playwright/test";
 import dotenv from 'dotenv';
-dotenv.config({ path: 'edurecOutlook.env' });
+dotenv.config({ path: './PlayWright/edurecOutlook.env' });
 
 async function getSavedSession() {
     const browser = await chromium.launch( {headless: false });
@@ -18,7 +18,7 @@ async function getSavedSession() {
     
     await page.locator('#N_STDACAD_SHORTCUT').waitFor({ timeout: 0 });
 
-    await page.context().storageState( {path: "./edurecAuth.json" });
+    await page.context().storageState( {path: "./PlayWright/edurecAuth.json" });
     await browser.close();
 
 };
