@@ -1,6 +1,6 @@
 import { chromium, expect } from "@playwright/test";
 import dotenv from 'dotenv';
-dotenv.config({ path: './PlayWright/edurecOutlook.env' });
+dotenv.config({ path: './PlayWright/eduglobe.env' });
 
 async function getSavedSession() {
     const browser = await chromium.launch( {headless: false });

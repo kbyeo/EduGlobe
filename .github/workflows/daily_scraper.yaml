@@ -1,0 +1,5 @@
+name: Scrape EduRec Website Daily at 5 am
+
+on:
+  schedule:
+  -cron: 0 5 * * *
