@@ -3,11 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
-dotenv.config({ path: 'supabaseStorage.env' });
+dotenv.config({ path: './PlayWright/supabase.env' });
 
 //supabase auth
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
+const supabaseKey = process.env.SUPABASE_PROJECT_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 //Time elapsed since Jan 1 1970 00:00 UTC, used to check how long the script has ran for
@@ -33,7 +33,7 @@ async function runScraper() {
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
-  storageState: './edurecAuth.json'
+  storageState: './PlayWright/edurecAuth.json'
   });
 
   //creates a new tab
@@ -142,6 +142,7 @@ async function runScraper() {
   //loop through and download the xls file for each faculty with the function downloadFacultyMappings
   for (const facultyName of facultyNames) {
     console.log(`Processing faculty: ${facultyName}`);
+    //console.log(`Number of rows in Excel file: ${rows.length}`);
     await downloadFacultyMappings(facultyName);
   }
 
