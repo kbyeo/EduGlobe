@@ -12,7 +12,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Install dependencies
-        run: npm install --no-optional
+        run: npm install --omit=optional
         working-directory: PlayWright
       - name: Run Scraper
         run: node PlayWright/scripts/edurecScraper.spec.mjs
@@ -28,7 +28,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Install dependencies
-        run: npm install --no-optional
+        run: npm install --omit=optional
         working-directory: PlayWright
       - name: Run Push Data to Database Script
         run: node PlayWright/scripts/bucketToDatabase.mjs
