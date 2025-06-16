@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install --omit=optional
-        working-directory: PlayWright
       - name: Run Scraper
         run: node PlayWright/scripts/edurecScraper.spec.mjs
         env:
@@ -29,7 +28,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install --omit=optional
-        working-directory: PlayWright
       - name: Run Push Data to Database Script
         run: node PlayWright/scripts/bucketToDatabase.mjs
         env:
