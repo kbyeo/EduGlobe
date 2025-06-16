@@ -21,6 +21,7 @@ function Discover({ id, setId }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [invalidSearch, setInvalidSearch] = useState(false);
     const rowsPerPage = 100;
     const totalPages = Math.ceil(searchResults.length / rowsPerPage);
     const currentRows = searchResults.slice(
@@ -85,11 +86,17 @@ function Discover({ id, setId }) {
                 console.error("Search failed: ", error.message);
             } else {
                 if (searchQuery === "") {
-                    setSearchResults("");
+                    setSearchResults([]);
+                } else if (data.length === 0){
+                    setInvalidSearch(true);
+                    setSearchResults([]);
+                    //show a component with a warning message, has button "OK" that closes it.
+
                 } else {
                     setSearchResults(data);
                 }
-                console.log("search successful");
+                setCurrentPage(1);
+                console.log("search query successful");
                 console.log("number of results: ", searchResults.length);
 
             }
@@ -190,6 +197,24 @@ function Discover({ id, setId }) {
                                         </span>
                                     </div>
                             </header>
+
+                            {invalidSearch && (
+                              <>
+                              <div className="invalid-search-overlay"></div>
+                              <div className="invalid-search-container">
+                                <div className="invalid-search-message">
+                                  <p>No mapping results found. Please search by country, faculty, university or course!</p>
+                                  <button
+                                    onClick={() => setInvalidSearch(false)}
+                                    className="dismiss-button"
+                                  >
+                                    Got it
+                                  </button>
+                                </div>
+                              </div>
+
+                              </>
+                            )}
 
                             {searchResults.length > 0
                                 ? (
