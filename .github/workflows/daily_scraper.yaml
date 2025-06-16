@@ -13,7 +13,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
-      - run: node PlayWright/scripts/edurecScraper.spec.mjs
+      - name: Install Playwright Browsers
+        run: npx playwright install
+      - name: Run Scraper
+        run: node PlayWright/scripts/edurecScraper.spec.mjs
 
   upload:
     runs-on: ubuntu-latest
@@ -23,4 +26,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
-      - run: node PlayWright/scripts/bucketToDatabase.mjs
+      - name: Install Playwright Browsers
+        run: npx playwright install
+      - name: Run Push Data to Database Script
+        run: node PlayWright/scripts/bucketToDatabase.mjs
