@@ -2,4 +2,25 @@ name: Scrape EduRec Website Daily at 5 am
 
 on:
   schedule:
-  -cron: 0 5 * * *
+    - cron: 0  21 * * *
+  workflow_dispatch:
+
+jobs: 
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - run: node PlayWright/Scripts/edurecScraper.spec.mjs
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: scrape
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - run: node PlayWright/Scripts/bucketToDatabase.mjs
