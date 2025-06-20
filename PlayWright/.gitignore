@@ -4,7 +4,6 @@ test-results/
 playwright-report/
 blob-report/
 /playwright/.cache/
-edurecOutlook.env
-supabase.env
+eduglobe.env
 downloads
 edurecAuth.json

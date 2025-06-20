@@ -5,7 +5,7 @@ import { Client } from 'pg';
 
 
 //load env file from supabaseStorage.env into process.env
-dotenv.config({ path: './PlayWright/supabase.env' }); // adjust path if needed
+dotenv.config({ path: './PlayWright/eduglobe.env' }); // adjust path if needed
 
 //get credentials to login into supabase
 const supabaseUrl = process.env.SUPABASE_PROJECT_URL;

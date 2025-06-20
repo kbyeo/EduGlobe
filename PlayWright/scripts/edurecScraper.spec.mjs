@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
-dotenv.config({ path: './PlayWright/supabase.env' });
+dotenv.config({ path: './PlayWright/eduglobe.env' });
 
 //supabase auth
 const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
