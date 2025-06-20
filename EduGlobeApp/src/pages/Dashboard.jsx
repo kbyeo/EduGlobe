@@ -174,7 +174,7 @@ function Dashboard({ id, setId }) {
                                              Message
                                          </li>
 
-                                         <li>
+                                         <li onClick={() => navigate('/myprofile')} >
                                              <img src={images.unselected.profile} alt="profile logo" />
                                              My Profile
                                          </li>
@@ -197,7 +197,7 @@ function Dashboard({ id, setId }) {
                                      <main className="main-content">
                                        <header className="dashheader">
                                          <h1 className="dashboard-title">Dashboard</h1>
-                                         <div className="search-bar">
+                                         <div className="search-bar" onClick={() => navigate('/discover')}>
                                              <span className="search-icon">
                                                  <img src={images.icon.searchIcon} alt="Search" />
                                              </span>
@@ -215,11 +215,12 @@ function Dashboard({ id, setId }) {
                                                <img src={images.icon.heartIcon} alt="heart" />
                                            </span>
                                            <span className="user-profile">
-                                              <span className="user-name">{displayName}</span>
+                                              <span className="user-name" onClick={() => navigate('/myprofile')}>{displayName}</span>
                                              <img
                                                src={images.selected.profile}
                                                alt="User Avatar"
                                                className="user-avatar"
+                                               onClick={() => navigate('/myprofile')}
                                              />
 
                                            </span>
@@ -274,7 +275,7 @@ function Dashboard({ id, setId }) {
 
                                                                 <div className="mapping-buttons2">
                                                                     <button className="add-button1" onClick={openPopup}>+ Add</button>
-                                                                    <button className="discover-button1">Discover mappings</button>
+                                                                    <button className="discover-button1" onClick={() => navigate('/discover')}>Discover mappings</button>
                                                                 </div>
                                                                 <p className="delete-note">*Right-click on a row to delete an entry</p>
                                                               </div>
@@ -285,7 +286,7 @@ function Dashboard({ id, setId }) {
                                                  : (  <><p>You have no current mappings.</p>
                                                         <div className="mapping-buttons">
                                                             <button className="add-button" onClick={openPopup}>+ Add</button>
-                                                            <button className="discover-button">Discover mappings</button>
+                                                            <button className="discover-button" onClick={() => navigate('/discover')}>Discover mappings</button>
                                                         </div></>)
                                              }
 

@@ -237,6 +237,10 @@
   margin-right: 40px;
 }
 
+.user-avatar:hover {
+  cursor: pointer;
+}
+
 .user-profile img {
   height: 48px;
   width: auto;
@@ -479,7 +483,7 @@
   z-index: 10;
   background-color: #000000;
   color: #ffffff;
-  border: 2px solid #6105b6;
+  border: 2px solid #6a39ce;
   border-radius: 8px;
   padding: 20px 30px;
 

@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import ProfileCreation from "./components/ProfileCreation.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Discover from "./pages/Discover.jsx";
+import MyProfile from "./pages/MyProfile.jsx";
 import supabaseClients from "./supabaseClient";
 // Destructure the instances
 const { supabase, mappings } = supabaseClients;
@@ -76,6 +77,7 @@ function App() {
                        <Route path="/" element={<Dashboard id={id} setId={setId} />} />
                        <Route path="/profile" element={<ProfileCreation userId={id} />} />
                        <Route path="/discover" element={<Discover id={id} setId={setId} />} />
+                       <Route path="/myprofile" element={<MyProfile id={id} setId={setId} />} />
 
                      </Routes>
                    </Router>

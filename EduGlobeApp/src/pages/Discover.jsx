@@ -74,17 +74,39 @@ function Discover({ id, setId }) {
          };
     const handleSearch = async (e) => {
         if (e.key === 'Enter' || e.type === 'click') {
+            //auto-adjust common searches
+            let adjustedQuery = searchQuery;
+            if (searchQuery.toLowerCase() === "cde" ||
+                searchQuery.toLowerCase() === "college of design and engineering") {
+                adjustedQuery = "college of design and eng";
+            }
+
+            if (searchQuery.toLowerCase() === "soc") {
+                adjustedQuery = "school of computing";
+            }
+
+            if (searchQuery.toLowerCase() === "fass" ||
+                searchQuery.toLowerCase() === "faculty of arts and social science" ||
+                searchQuery.toLowerCase() === "faculty of arts and social sciences") {
+                adjustedQuery = "faculty of arts & social sci";
+            }
+
+            if (searchQuery.toLowerCase() === "school of business") {
+                adjustedQuery = "nus business school";
+            }
+
             const { data, error } = await mappings.from("edurec_mappings")
                                                   .select("*")
-                                                  .or(`faculty.ilike.%${searchQuery}%,` +
-                                                      `partner_university.ilike.%${searchQuery}%,` +
-                                                      `pu_course_1.ilike.%${searchQuery}%,` +
-                                                      `nus_course_1.ilike.%${searchQuery}%,` +
-                                                      `nus_course_1_title.ilike.%${searchQuery}%`);
+                                                  .or(`faculty.ilike.%${adjustedQuery}%,` +
+                                                      `partner_university.ilike.%${adjustedQuery}%,` +
+                                                      `pu_course_1.ilike.%${adjustedQuery}%,` +
+                                                      `nus_course_1.ilike.%${adjustedQuery}%,` +
+                                                      `nus_course_1_title.ilike.%${adjustedQuery}%`);
 
             if (error) {
                 console.error("Search failed: ", error.message);
             } else {
+                //handle search results based on trivial cases
                 if (searchQuery === "") {
                     setSearchResults([]);
                 } else if (data.length === 0){
@@ -144,7 +166,7 @@ function Discover({ id, setId }) {
                                 Message
                         </li>
 
-                        <li>
+                        <li onClick={() => navigate('/myprofile')}>
                             <img src={images.unselected.profile} alt="profile logo" />
                                 My Profile
                         </li>
@@ -187,11 +209,12 @@ function Discover({ id, setId }) {
                                             <img src={images.icon.heartIcon} alt="heart" />
                                         </span>
                                         <span className="user-profile">
-                                            <span className="user-name">{displayName}</span>
+                                            <span className="user-name" onClick={() => navigate('/myprofile')}>{displayName}</span>
                                             <img
                                                 src={images.selected.profile}
                                                 alt="User Avatar"
                                                 className="user-avatar"
+                                                onClick={() => navigate('/myprofile')}
                                             />
 
                                         </span>
