@@ -246,6 +246,21 @@
   width: auto;
 }
 
+.preprocess {
+  display: flex;
+}
+
+.filter-icon{
+  height: 45px;
+  margin-top: 12px;
+  margin-left: 5px;
+  flex-align: right;
+}
+
+.filter-icon:hover{
+  cursor: pointer;
+}
+
 .search-results {
   padding-left: 20px;
   padding-right: 16px;
@@ -365,14 +380,20 @@
 
 .pagination-controls {
   display: flex;
-  justify-content: right;
+
+
   align-items: center;
-  margin: 16px 0;
+  margin: 15px 0;
   gap: 16px;
   font-family: "Poppins", sans-serif;
 }
-.pagination-controls button {
+
+.pager {
+    margin-left: auto;
+}
+.pager button {
   padding: 8px 16px;
+
   background-color: #3f007a;
   color: #b9b8ff;
   border: none;
@@ -391,8 +412,31 @@
 .pagination-controls span {
   font-size: 16px;
   color: #b9b8ff;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
+.filter-indicator {
+    color: #ffffff;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 5px;
+    font-size: 0.7rem;
+    margin-bottom: 0px;
+    justify-content: left;
+    text-align: left;
+}
+
+.filter-boolean {
+    color: #a6a4f5;
+    margin-bottom: 0px;
+    margin-right: 8px;
+
+}
+
+.filter-content {
+  margin-right: 8px;
+}
 .landing-page {
   display: flex;
   justify-content: center;
@@ -511,4 +555,115 @@
 
 .dismiss-button:hover {
   background-color: #490885;
+}
+
+.filter-interface-overlay {
+  position: fixed;
+  top: 116px;
+  width: 100%; /* Cover the entire screen */
+  height: 100%; /* Cover the entire screen */
+  background-color: rgba(0, 0, 0, 0.6); /* Darkened background with transparency */
+  backdrop-filter: blur(3px); /* Blur the content behind the overlay */
+  z-index: 9; /* Ensure it is below the invalid search popup */
+}
+
+.filter-interface-container {
+  position: fixed;
+  top: 43%;
+  left: 62.3%;
+  transform: translate(-50%, -20%);
+  z-index: 10;
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #6a39ce;
+  border-radius: 8px;
+  padding: 20px 30px;
+
+  text-align: center;
+  width: 360px;
+  z-index: 10;
+}
+
+.filter-interface-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-interface-input h2 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: #b9b8ff;
+
+}
+
+.filter-interface-input p {
+    margin-bottom: 20px;
+    margin-top: 0px;
+    color: #d34862;
+    font-style: italic;
+
+}
+
+.filter-interface-input select {
+    max-width: 190px;
+    min-width: 190px;
+
+    font-family: "Poppins", sans-serif;
+}
+
+.filter-interface-input label {
+    font-family: "Poppins", sans-serif;
+    color: #f8f8ff;
+}
+
+.filter-input {
+    margin-bottom: 20px;
+    align-self: flex-end;
+}
+
+.filter-input label {
+    margin-right: 20px;
+}
+.filter-input .empty-selection {
+    color: #8a8a8a;
+}
+
+.filter-input:has(select option:checked:not([value=""])) label {
+    color: #976efe;
+}
+
+.filter-input select.placeholder {
+  color:#8a8a8a;
+}
+.valid-select{
+  color: #000000;
+}
+.done-button {
+  font-family: "Poppins", sans-serif;
+  background-color: #6a39ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.done-button:hover {
+  background-color: #490885;
+}
+.filter-reset-button {
+  font-family: "Poppins", sans-serif;
+  background-color: #ce3551;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 12px;
+}
+
+.filter-reset-button:hover {
+  background-color: #a5243b;
 }

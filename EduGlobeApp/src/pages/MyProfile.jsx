@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { v4 as uuid } from "uuid";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import images from '../assets/images';
 import supabaseClients from "../supabaseClient";
@@ -14,6 +15,10 @@ function MyProfile( {id, setId} ) {
     const[createdAt, setCreatedAt] = useState("");
     const[firstSignIn, setFirstSignIn] = useState("");
     const[updateSuccess, setUpdateSuccess] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    const fileInputRef = useRef(null);
     const navigate = useNavigate();
 
     const getUserProfile = async () => {
@@ -31,6 +36,7 @@ function MyProfile( {id, setId} ) {
                   setCourseOfStudy(data.course_of_study);
                   setCreatedAt(data.created_at);
                   setFirstSignIn(data.first_sign_in);
+                  setAvatarUrl(data.avatar_url);
                   console.log("profile fetched successfully");
 
                 } else {
@@ -59,6 +65,41 @@ function MyProfile( {id, setId} ) {
           console.error("Error updating profile: ", error.message);
         } else {
           setUpdateSuccess(true);
+        }
+    };
+
+    const triggerFileSelect = () => fileInputRef.current?.click();
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+          setUploading(true);
+          const fileExt = file.name.split(".").pop();
+          const filePath = `${id}/${uuid()}.${fileExt}`;
+          // upload to storage
+          const { error: uploadErr } = await supabase
+            .storage
+            .from("avatars")
+            .upload(filePath, file, { upsert: true });
+          if (uploadErr) throw uploadErr;
+          //obtain public URL (make bucket public, or use signed URL if private)
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from("avatars").getPublicUrl(filePath);
+          //save URL in profile table
+          const { error: dbErr } = await supabase
+            .from("userprofiles")
+            .update({ avatar_url: publicUrl })
+            .eq("id", id);
+          if (dbErr) throw dbErr;
+          //reflect immediately
+          setAvatarUrl(publicUrl);
+        } catch (err) {
+          alert(`Avatar upload failed: ${err.message}`);
+        } finally {
+          setUploading(false);
+          e.target.value = "";           // reset file input
         }
     };
 
@@ -185,9 +226,24 @@ function MyProfile( {id, setId} ) {
                                                         )}
 
                             <section className="profile-body">
-                                      <div className="profile-picture">
-                                        <img src={images.selected.profile} alt="User profile" className="avatar-image" />
+                                      <div
+                                        className="profile-picture"
+                                        onClick={triggerFileSelect}
+                                        >
+                                        <img
+                                            src={avatarUrl || images.selected.profile}
+                                            alt="User profile"
+                                            className="avatar-image" />
+                                            {uploading && <div className="avatar-loader" />}
                                       </div>
+                                      <input
+                                                  type="file"
+                                                  accept="image/*"
+                                                  ref={fileInputRef}
+                                                  style={{ display: "none" }}
+                                                  onChange={handleFileChange}
+                                                />
+
                                       <form className="profile-fields" onSubmit={handleUpdate}>
                                                   <label>Display name</label>
                                                   <input required value={displayName} onChange={(e) => setDisplayName(e.target.value)} />

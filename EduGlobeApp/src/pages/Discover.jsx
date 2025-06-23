@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 //IMAGES
 import images from '../assets/images';
@@ -22,6 +22,14 @@ function Discover({ id, setId }) {
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [invalidSearch, setInvalidSearch] = useState(false);
+    const [filterInterface, setFilterInterface] = useState(false);
+    const [filterResults, setFilterResults] = useState([]);
+    const [filterFacultyParam, setFilterFacultyParam] = useState("");
+    const [filterCountryParam, setFilterCountryParam] = useState("");
+    const [filterPUParam, setFilterPUParam] = useState("");
+    const [filterCourseCodeParam, setFilterCourseCodeParam] = useState("");
+    const [filterApprovedParam, setFilterApprovedParam] = useState("")
+
     const rowsPerPage = 100;
     const totalPages = Math.ceil(searchResults.length / rowsPerPage);
     const currentRows = searchResults.slice(
@@ -73,6 +81,13 @@ function Discover({ id, setId }) {
             }
          };
     const handleSearch = async (e) => {
+        //reset all filter params
+        setFilterInterface(false);
+        setFilterFacultyParam("");
+        setFilterCountryParam("");
+        setFilterPUParam("");
+        setFilterCourseCodeParam("");
+        setFilterApprovedParam("");
         if (e.key === 'Enter' || e.type === 'click') {
             //auto-adjust common searches
             let adjustedQuery = searchQuery;
@@ -109,13 +124,16 @@ function Discover({ id, setId }) {
                 //handle search results based on trivial cases
                 if (searchQuery === "") {
                     setSearchResults([]);
+                    setFilterResults([]);
                 } else if (data.length === 0){
                     setInvalidSearch(true);
                     setSearchResults([]);
+                    setFilterResults([]);
                     //show a component with a warning message, has button "OK" that closes it.
 
                 } else {
                     setSearchResults(data);
+                    setFilterResults(data);
                 }
                 setCurrentPage(1);
                 console.log("search query successful");
@@ -124,6 +142,100 @@ function Discover({ id, setId }) {
             }
         }
     }
+
+    const activeFilters = {
+      Faculty:   filterFacultyParam,
+      Country:   filterCountryParam,
+      PU:        filterPUParam,
+      Course:    filterCourseCodeParam,
+      Approved:  filterApprovedParam
+    };
+    const filterBadges = Object.entries(activeFilters)
+      .filter(([, value]) => value !== undefined && value !== "" && value !== null)
+      .map(([key, value]) => `${key}: ${value}`);
+
+    const handleFilterReset = async () => {
+        setFilterFacultyParam("");
+        setFilterCountryParam("");
+        setFilterPUParam("");
+        setFilterCourseCodeParam("");
+        setFilterApprovedParam("");
+    }
+
+    const handleFilterSubmit = async () => {
+        setFilterInterface(false);
+        setSearchResults(filtered);
+    }
+
+    const filtered = useMemo(() => {
+        return filterResults.filter(r =>
+            (filterFacultyParam ? r.faculty === filterFacultyParam : true) &&
+            (filterCountryParam ? r.faculty === filterCountryParam : true) &&
+            (filterPUParam ? r.partner_university === filterPUParam : true) &&
+            (filterCourseCodeParam ? r.nus_course_1 === filterCourseCodeParam : true) &&
+            (filterApprovedParam ? (r.pre_approved ? "Yes" : "No") === filterApprovedParam : true)
+            );
+            }, [searchResults, filterFacultyParam, filterCountryParam, filterPUParam, filterCourseCodeParam, filterApprovedParam]);
+
+    const faculties = useMemo(
+        () => Array.from(
+          new Set(
+            filtered
+              .map(r => r.faculty)
+              .filter(Boolean)           //skips empty / null
+          )
+        ),
+        [filtered]                  //recompute when results change
+    );
+
+    const countries = useMemo(
+        () => Array.from(
+          new Set(
+            filtered
+              .map(r => r.faculty)
+              .filter(Boolean)           //skips empty / null
+          )
+        ),
+        [filtered]                  //recompute when results change
+    );
+
+    const partnerUnis = useMemo(
+        () => Array.from(
+          new Set(
+            filtered
+              .map(r => r.partner_university)
+              .filter(Boolean)           //skips empty / null
+          )
+        ),
+        [filtered]                  //recompute when results change
+    );
+
+    const courseCodes = useMemo(
+        () => Array.from(
+          new Set(
+            filtered
+              .map(r => r.nus_course_1)
+              .filter(Boolean)           //skips empty / null
+          )
+        ),
+        [filtered]                  //recompute when results change
+    );
+
+    const approved = useMemo(
+        () => Array.from(
+          new Set(
+            filtered
+              .map(r => r.pre_approved ? "Yes" : "No")
+              .filter(Boolean)           //skips empty / null
+          )
+        ),
+        [filtered]                  //recompute when results change
+    );
+
+
+
+
+
 
     return (
             <div className="discover-container">
@@ -242,7 +354,14 @@ function Discover({ id, setId }) {
                             {searchResults.length > 0
                                 ? (
                                       <section className="search-results">
+                                        <div className="preprocess">
                                         <p className="search-query">Search Result for: <em>{searchQuery}</em></p>
+                                        <img
+                                            src={images.icon.filterIcon}
+                                            alt="Filter"
+                                            className="filter-icon"
+                                            onClick={() => setFilterInterface(true)}/>
+                                        </div>
                                         <div className="results-table-container">
                                         <table className="results-table">
                                           <thead>
@@ -279,6 +398,13 @@ function Discover({ id, setId }) {
                                         </div>
 
                                         <div className="pagination-controls">
+                                            <div className="filter-indicator">
+                                                <p className="filter-boolean">{filterBadges.length
+                                                         ? `Filters active: `
+                                                         : "No filters active"}</p>
+                                                <p className="filter-content">{filterBadges.length ? filterBadges.join(", ") : ""}</p>
+                                            </div>
+                                            <div className="pager">
                                                 <button
                                                   onClick={() => handlePageChange(currentPage - 1)}
                                                   disabled={currentPage === 1}
@@ -294,7 +420,10 @@ function Discover({ id, setId }) {
                                                 >
                                                   Next
                                                 </button>
-                                              </div>
+                                            </div>
+
+                                         </div>
+
                                       </section>
                                    )
                                 : (
@@ -324,6 +453,122 @@ function Discover({ id, setId }) {
 
 
                             )}
+                        {filterInterface && (
+                                                      <>
+                                                      <div className="filter-interface-overlay"></div>
+                                                      <div className="filter-interface-container">
+                                                        <div className="filter-interface-input">
+                                                          <h2>Filter</h2>
+                                                          <p>**Available filter options change based on selected parameters</p>
+                                                          <div className="filter-input">
+                                                          <label>Faculty:</label>
+                                                          <select
+                                                          value={filterFacultyParam}
+                                                          onChange={(e) => setFilterFacultyParam(e.target.value)}
+                                                          className={filterFacultyParam === "" ? "placeholder" : ""}
+                                                          >
+                                                            <option value="" className="empty-selection">Select a Faculty</option>
+
+                                                            {faculties.map(faculty => (
+                                                                <option key={faculty} value={faculty} className="valid-select">
+                                                                    {faculty}
+                                                                </option>
+                                                                )
+                                                            )}
+                                                          </select>
+                                                          </div>
+
+                                                          <div className="filter-input">
+                                                          <label>Country:</label>
+                                                          <select
+                                                          value={filterCountryParam}
+                                                          onChange={(e) => setFilterCountryParam(e.target.value)}
+                                                          className={filterCountryParam === "" ? "placeholder" : ""}
+                                                          >
+                                                            <option value="" className="empty-selection">Select a Country</option>
+
+                                                            {countries.map(country => (
+                                                                <option key={country} value={country} className="valid-select">
+                                                                    {country}
+                                                                </option>
+                                                                )
+                                                            )}
+                                                          </select>
+                                                          </div>
+
+                                                          <div className="filter-input">
+                                                          <label>Partner Uni:</label>
+                                                          <select
+                                                          value={filterPUParam}
+                                                          onChange={(e) => setFilterPUParam(e.target.value)}
+                                                          className={filterPUParam === "" ? "placeholder" : ""}
+                                                          >
+                                                            <option value="" className="empty-selection">Select a University</option>
+
+                                                            {partnerUnis.map(pu => (
+                                                                <option key={pu} value={pu} className="valid-select">
+                                                                    {pu}
+                                                                </option>
+                                                                )
+                                                            )}
+                                                          </select>
+                                                          </div>
+
+                                                          <div className="filter-input">
+                                                          <label>NUS Course Code:</label>
+                                                          <select
+                                                          value={filterCourseCodeParam}
+                                                          onChange={(e) => setFilterCourseCodeParam(e.target.value)}
+                                                          className={filterCourseCodeParam === "" ? "placeholder" : ""}
+                                                          >
+                                                            <option value="" className="empty-selection">Select a Course Code</option>
+
+                                                            {courseCodes.map(code => (
+                                                                <option key={code} value={code} className="valid-select">
+                                                                    {code}
+                                                                </option>
+                                                                )
+                                                            )}
+                                                          </select>
+                                                          </div>
+
+                                                          <div className="filter-input">
+                                                          <label>Pre-approved:</label>
+                                                          <select
+                                                          value={filterApprovedParam}
+                                                          onChange={(e) => setFilterApprovedParam(e.target.value)}
+                                                          className={filterApprovedParam === "" ? "placeholder" : ""}
+                                                          >
+                                                            <option value="" className="empty-selection">All</option>
+
+                                                            {approved.map(app => (
+                                                                <option key={app} value={app} className="valid-select">
+                                                                    {app}
+                                                                </option>
+                                                                )
+                                                            )}
+                                                          </select>
+                                                          </div>
+
+
+                                                        </div>
+                                                        <button
+                                                          onClick={() => handleFilterReset()}
+                                                          className="filter-reset-button">
+                                                            Reset
+                                                        </button>
+
+                                                        <button
+                                                          onClick={() => handleFilterSubmit()}
+                                                          className="done-button"
+                                                        >
+                                                          Done
+                                                        </button>
+
+                                                      </div>
+
+                                                      </>
+                                                    )}
                         </main>
             </div>
 

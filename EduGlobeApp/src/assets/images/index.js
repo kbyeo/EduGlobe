@@ -22,6 +22,8 @@ import messageUnselected from './message-unselected.png';
 import profilePlaceholderUnselected from './profile-placeholder.png';
 import settingsUnselected from './settings-unselected.png';
 
+import filterIcon from './filter.png';
+
 export default {
   Logo,
 
@@ -33,6 +35,7 @@ export default {
     searchIcon,
     msgIcon,
     heartIcon,
+    filterIcon,
   },
 
   selected: {
