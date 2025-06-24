@@ -364,10 +364,12 @@
 .results-table tbody {
   background-color: #131313;
   transition: ease 1s;
+
 }
 
 .results-table tbody tr:hover {
   background-color: #2d0058; /* Highlight row on hover */
+  cursor: pointer;
 }
 .results-table th {
   text-transform: uppercase;
@@ -667,3 +669,4 @@
 .filter-reset-button:hover {
   background-color: #a5243b;
 }
+

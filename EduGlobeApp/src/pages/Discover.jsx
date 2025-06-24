@@ -8,7 +8,9 @@ import supabaseClients from "../supabaseClient";
 const { supabase, mappings } = supabaseClients;
 import ProfileCreation from "../components/ProfileCreation.jsx"
 import LogoutButton from "../components/LogoutButton.jsx";
+import CourseDetails from "../components/CourseDetails.jsx";
 import "./Discover.css";
+const AY = "2024-2025";
 
 
 function Discover({ id, setId }) {
@@ -28,7 +30,10 @@ function Discover({ id, setId }) {
     const [filterCountryParam, setFilterCountryParam] = useState("");
     const [filterPUParam, setFilterPUParam] = useState("");
     const [filterCourseCodeParam, setFilterCourseCodeParam] = useState("");
-    const [filterApprovedParam, setFilterApprovedParam] = useState("")
+    const [filterApprovedParam, setFilterApprovedParam] = useState("");
+    const [coursePopUp, setCoursePopUp] = useState(false);
+    const [selectedRowData, setSelectedRowData] = useState(null);
+    const [selectedCourseDescription, setSelectedCourseDescription] = useState(null);
 
     const rowsPerPage = 100;
     const totalPages = Math.ceil(searchResults.length / rowsPerPage);
@@ -82,6 +87,7 @@ function Discover({ id, setId }) {
          };
     const handleSearch = async (e) => {
         //reset all filter params
+        setCoursePopUp(false);
         setFilterInterface(false);
         setFilterFacultyParam("");
         setFilterCountryParam("");
@@ -232,6 +238,38 @@ function Discover({ id, setId }) {
         [filtered]                  //recompute when results change
     );
 
+    const handleRowClick = async (result) => {
+        setCoursePopUp(true);
+        setSelectedRowData(result);
+
+    }
+
+    useEffect(() => {
+        if (!selectedRowData?.nus_course_1) {
+          console.log("nus course not found");
+          setSelectedCourseDescription(null);
+          return;
+        }
+        const abort = new AbortController();      // lets us cancel if user clicks fast
+        async function fetchDescription(moduleCode) {
+          try {
+            const url = `https://api.nusmods.com/v2/${AY}/modules/${moduleCode}.json`;
+            const res = await fetch(url, { signal: abort.signal });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            console.log("NUSMods fetch successful");
+            setSelectedCourseDescription(json || {title: "Course not documented", description: "This course has not been documented by NUSMods yet. We apologise for the inconvenience! Note: most special exchange electives and short term programs (EX, IE) are not selected for documentation. Try searching for your faculty core courses instead!"});
+          } catch (err) {
+            if (err.name !== "AbortError") {
+              console.error("NUSMods fetch failed:", err);
+              setSelectedCourseDescription({title: "Course not documented", description: "This course has not been documented by NUSMods yet. We apologise for the inconvenience! Note: most special exchange electives and short term programs (EX, IE) are not selected for documentation. Try searching for your faculty core courses instead!"});
+            }
+          }
+        }
+        fetchDescription(selectedRowData.nus_course_1);
+        return () => abort.abort();    // clean-up if effect re-runs
+      }, [selectedRowData]);
+
 
 
 
@@ -380,7 +418,7 @@ function Discover({ id, setId }) {
                                           </thead>
                                           <tbody>
                                             {currentRows.map((result, index) => (
-                                              <tr key={index}>
+                                              <tr key={index} onClick={() => handleRowClick(result)}>
                                                 <td>{result.faculty}</td>
                                                 <td>{result.faculty}</td>
                                                 <td>{result.partner_university}</td>
@@ -453,6 +491,19 @@ function Discover({ id, setId }) {
 
 
                             )}
+
+                        {coursePopUp && selectedRowData && selectedCourseDescription && (
+                                                      <>
+
+                                                      <CourseDetails
+                                                      selectedRowData={selectedRowData}
+                                                      selectedCourseDescription={selectedCourseDescription}
+                                                      onClose={() => setCoursePopUp(false)}
+                                                      />
+
+
+                                                      </>
+                                                    )}
                         {filterInterface && (
                                                       <>
                                                       <div className="filter-interface-overlay"></div>

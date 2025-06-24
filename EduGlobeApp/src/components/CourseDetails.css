@@ -1,0 +1,143 @@
+
+
+.course-info-overlay {
+  position: fixed;
+  top: 116px;
+  width: 100%; /* Cover the entire screen */
+  height: 100%; /* Cover the entire screen */
+  background-color: rgba(0, 0, 0, 0.6); /* Darkened background with transparency */
+  backdrop-filter: blur(3px); /* Blur the content behind the overlay */
+  z-index: 9; /* Ensure it is below the invalid search popup */
+}
+
+.course-info-container {
+  position: fixed;
+  top: 35%;
+  left: 60%;
+  display:flex;
+  flex-direction:column;
+  transform: translate(-50%, -20%);
+  z-index: 10;
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #6a39ce;
+  border-radius: 8px;
+  padding: 20px 30px;
+
+  text-align: left;
+  width: 60vw;
+  z-index: 10;
+  min-height: 60vh;
+  max-height: 60vh;
+  overflow:hidden;
+
+}
+.course-info-head {
+    display: flex;
+    margin-bottom: 0px;
+    color: #976efe;
+
+}
+
+.course-info-head .header {
+    color: #976efe;
+    margin-left: 0px;
+    font-weight: 600;
+}
+
+.course-info-head p {
+    margin-left: 10px;
+    margin-top: 19.5px;
+    font-size: 1.4rem;
+    margin-bottom: 0px;
+    color: #b9b8ff;
+
+}
+
+.course-info-description {
+    margin:0 0 0.1rem 0;
+    color: #e8e8e8;
+    font-size: 0.9rem;
+
+}
+
+.course-info-description .mapping-direction {
+    font-size: 1em;
+    font-style: italic;
+    color: #96ddf4;
+}
+
+.course-info-description .mapping-direction-add {
+    font-size: 1em;
+    color: #b9b8ff;
+}
+
+.reviews-section{
+  display:flex;
+  margin-top: 0px;
+  flex-direction:column;
+  flex:1;
+  overflow-y: auto;
+  margin-bottom: 0px;
+
+}
+.reviews-section .review-header {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color:#976efe;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+
+}
+
+.reviews-section .review-header .write-review {
+    margin-bottom: 0px;
+    align-self: center;
+    height: 1.4rem;
+    margin-left: 10px;
+}
+
+.review-header p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.reviews{
+  flex:1;                   /* fill what reviews-section gets */
+
+  border-radius: 5px;
+  overflow-y:auto;          /* make it scroll instead of pushing the button down */
+}
+.course-close-button {
+  font-family: "Poppins", sans-serif;
+  background-color: #6a39ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  align-self: flex-end;
+}
+
+.course-close-button:hover {
+  background-color: #490885;
+}
+
+.reviews::-webkit-scrollbar {
+  width: 10px;              /* vertical bar */
+  height: 10px;             /* horizontal bar */
+}
+.reviews::-webkit-scrollbar-track {
+  background: #000000;      /* track (rail) */
+  border-radius: 6px;
+}
+.reviews::-webkit-scrollbar-thumb {
+  background: #6a39ce;      /* draggable “thumb” */
+  border-radius: 6px;
+  border: 2px solid #000000;/* creates a gap around thumb */
+  transition: background 0.5s;
+}
+.reviews::-webkit-scrollbar-thumb:hover {
+  background: #8c52ff;      /* hover colour */
+}
