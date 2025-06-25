@@ -29,7 +29,7 @@
   z-index: 10;
   min-height: 60vh;
   max-height: 60vh;
-  overflow:hidden;
+  overflow-y: auto;
 
 }
 .course-info-head {
@@ -52,6 +52,7 @@
     margin-bottom: 0px;
     color: #b9b8ff;
 
+
 }
 
 .course-info-description {
@@ -69,7 +70,7 @@
 
 .course-info-description .mapping-direction-add {
     font-size: 1em;
-    color: #b9b8ff;
+    color: #976efe;
 }
 
 .reviews-section{
@@ -77,7 +78,7 @@
   margin-top: 0px;
   flex-direction:column;
   flex:1;
-  overflow-y: auto;
+  overflow: visible;
   margin-bottom: 0px;
 
 }
@@ -98,6 +99,20 @@
     margin-left: 10px;
 }
 
+.reviews-section .review-header .review-icon {
+    height: 1.8rem;
+    width: 1.85rem;
+    align-self: center;
+    margin-left: 7px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.reviews-section .review-header .review-icon:hover {
+
+    align-self: center;
+    margin-left: 7px;
+    cursor: pointer;
+}
 .review-header p {
     margin-top: 0px;
     margin-bottom: 0px;
@@ -106,7 +121,7 @@
   flex:1;                   /* fill what reviews-section gets */
 
   border-radius: 5px;
-  overflow-y:auto;          /* make it scroll instead of pushing the button down */
+  overflow: visible;
 }
 .course-close-button {
   font-family: "Poppins", sans-serif;
@@ -118,26 +133,204 @@
   cursor: pointer;
   transition: background-color 0.2s;
   align-self: flex-end;
+  position: fixed;
+  margin-top: 14px;
+
+
 }
 
 .course-close-button:hover {
   background-color: #490885;
 }
 
-.reviews::-webkit-scrollbar {
+.course-info-container::-webkit-scrollbar {
   width: 10px;              /* vertical bar */
   height: 10px;             /* horizontal bar */
 }
-.reviews::-webkit-scrollbar-track {
+.course-info-container::-webkit-scrollbar-track {
   background: #000000;      /* track (rail) */
   border-radius: 6px;
 }
-.reviews::-webkit-scrollbar-thumb {
+.course-info-container::-webkit-scrollbar-thumb {
   background: #6a39ce;      /* draggable “thumb” */
   border-radius: 6px;
   border: 2px solid #000000;/* creates a gap around thumb */
   transition: background 0.5s;
 }
-.reviews::-webkit-scrollbar-thumb:hover {
+.course-info-container::-webkit-scrollbar-thumb:hover {
   background: #8c52ff;      /* hover colour */
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2px;
+
+}
+
+.review-form textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #6105b6;
+  padding: 6px 0;
+  font-size: 13.5px;
+  background: transparent;
+  outline: none;
+  transition: border-color .2s ease;
+  color: #b7b7b7;
+  font-family: "Poppins", sans-serif;
+   padding: 1px 0px;
+  margin-top: 5px;
+  text-align: justify;
+  resize: none;
+}
+
+.review-form textarea:focus {
+  border-bottom: 2px solid #976efe;
+}
+
+.review-form .review-buttons {
+    flex-direction: row;
+    align-self: flex-end;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.review-buttons button {
+  border: none;
+  border-radius: 18px;
+  padding: 5px 14px;
+  margin-left: 7px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.review-buttons .cancel-review-button {
+  background: #000000;
+  color: #b9b9b9;
+}
+
+.review-buttons .cancel-review-button:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+.review-buttons .submit-review-button:disabled {
+  background:#282828;
+  color: #8a8a8a;
+  cursor: not-allowed;
+}
+
+.review-buttons .submit-review-button:not(:disabled) {
+  background: #490885;  /* YouTube primary blue */
+  color: #e8e8e8;
+}
+.review-buttons .submit-review-button:not(:disabled):hover {
+  background: #6a39ce;
+}
+
+.reviews {
+    margin-left: 0px;
+
+}
+
+.reviews .reviews-list {
+    margin-left: 0px;
+    list-style: none;
+    padding-left: 5px;
+
+}
+
+.reviews .reviews-list .review-card {
+    margin-left: 0px;
+    display: flex;
+    margin-bottom: 12px;
+
+}
+
+
+.review-text {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+    align-self: center;
+
+}
+
+.review-card img {
+    height: 2.8rem;
+    align-self: flex-start;
+    margin-top: 4px;
+    margin-right: 7px;
+
+}
+
+.reviews .reviews-list .review-card .review-meta{
+
+    color: #976efe;
+    margin-top: 3px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+
+
+}
+
+.review-date {
+    color: #b9b8ff;
+}
+
+.review-body {
+    margin-left: 0px;
+    margin-top: 0px;
+    font-size: 0.9rem;
+    color: #b7b7b7;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;       /* keep user-typed line breaks */
+      word-break: break-all;       /* *only* if you still see overflow in edge cases */
+
+
+}
+
+.no-reviews {
+    margin-left: 0px;
+    font-size: 0.9rem;
+    margin-top: 0px;
+    align-self: center;
+    color: #b7b7b7;
+
+}
+
+.loading-reviews {
+    color: #b7b7b7;
+}
+
+.back-to-top-button {
+  font-family: "Poppins", sans-serif;
+  background-color: #2d0058;
+  color: #b9b9b9;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 16px;
+  cursor: pointer;
+  transition: ease 0.2s;
+  align-self: flex-end;
+  margin-bottom: 12px;
+  width: 100%;
+
+
+
+
+
+
+}
+
+.back-to-top-button:hover {
+  background-color: #490885;
+  color: #ffffff;
 }

@@ -20,6 +20,7 @@ function Discover({ id, setId }) {
     const[courseOfStudy, setCourseOfStudy] = useState("");
     const[createdAt, setCreatedAt] = useState("");
     const[firstSignIn, setFirstSignIn] = useState("");
+    const [userAvatar, setUserAvatar] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -49,6 +50,8 @@ function Discover({ id, setId }) {
 
     const navigate = useNavigate();
 
+
+
     const getUserProfile = async () => {
                 const { data, error } = await supabase
                   .from("userprofiles")
@@ -64,12 +67,21 @@ function Discover({ id, setId }) {
                   setCourseOfStudy(data.course_of_study);
                   setCreatedAt(data.created_at);
                   setFirstSignIn(data.first_sign_in);
+                  setUserAvatar(data.avatar_url);
                   console.log("profile fetched successfully");
 
                 } else {
                     console.error("No profile found for this id");
 
                 }
+    };
+
+    const userProfile = {
+        user_display_name: displayName,
+        user_email: email,
+        user_year_of_study: yearOfStudy,
+        user_course_of_study: courseOfStudy,
+        user_avatar: userAvatar
     };
 
     useEffect(() => {
@@ -499,6 +511,7 @@ function Discover({ id, setId }) {
                                                       selectedRowData={selectedRowData}
                                                       selectedCourseDescription={selectedCourseDescription}
                                                       onClose={() => setCoursePopUp(false)}
+                                                      userProfile={userProfile}
                                                       />
 
 

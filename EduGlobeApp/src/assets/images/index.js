@@ -5,6 +5,7 @@ import logout from './logout.png';
 import searchIcon from './search-icon.png';
 import msgIcon from './msg-icon.png';
 import heartIcon from './heart-icon.png';
+import reviewIcon from "./review-icon.png";
 
 import dashboardSelected from './dashboard-selected.png';
 import discoverSelected from './discover-selected.png';
@@ -36,6 +37,7 @@ export default {
     msgIcon,
     heartIcon,
     filterIcon,
+    reviewIcon,
   },
 
   selected: {
