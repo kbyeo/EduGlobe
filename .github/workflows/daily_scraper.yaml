@@ -17,8 +17,8 @@ jobs:
         run: node PlayWright/scripts/edurecScraper.spec.mjs
         env:
           SUPABASE_PROJECT_KEY: ${{ secrets.SUPABASE_PROJECT_KEY }}
-          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_PROJECT_URL }}
+          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_DATABASE_URL }}
 
   upload:
     runs-on: ubuntu-latest
@@ -27,12 +27,14 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Install dependencies
-        run: npm install --omit=optional
+        run: npm install --no-optional     
+      - name: Install Playwright Browsers Dependencies
+        run: npx playwright install-deps
+      - name: Install Playwright browsers
+        run: npx playwright install 
       - name: Run Push Data to Database Script
         run: node PlayWright/scripts/bucketToDatabase.mjs
         env:
           SUPABASE_PROJECT_KEY: ${{ secrets.SUPABASE_PROJECT_KEY }}
-          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_PROJECT_URL }}
-
-
+          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_DATABASE_URL }}
