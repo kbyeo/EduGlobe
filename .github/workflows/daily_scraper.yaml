@@ -11,14 +11,20 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
+      - name: Write edurecAuth.json from secret
+        run: echo "${{ secrets.EDUREC_AUTH_JSON }}" | base64 -d > PlayWright/edurecAuth.json
       - name: Install dependencies
         run: npm install --omit=optional
+      - name: Install Playwright Browsers Dependencies
+        run: npx playwright install-deps
+      - name: Install Playwright browsers
+        run: npx playwright install 
       - name: Run Scraper
         run: node PlayWright/scripts/edurecScraper.spec.mjs
         env:
           SUPABASE_PROJECT_KEY: ${{ secrets.SUPABASE_PROJECT_KEY }}
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
-          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_DATABASE_URL }}
+          SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
 
   upload:
     runs-on: ubuntu-latest
@@ -37,4 +43,4 @@ jobs:
         env:
           SUPABASE_PROJECT_KEY: ${{ secrets.SUPABASE_PROJECT_KEY }}
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
-          SUPABASE_DATABASE_URL=: ${{ secrets.SUPABASE_DATABASE_URL }}
+          SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
