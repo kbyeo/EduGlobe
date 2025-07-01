@@ -1,9 +1,12 @@
 import { chromium, expect } from "@playwright/test";
 import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
+
 dotenv.config({ path: './PlayWright/eduglobe.env' });
 
 async function getSavedSession() {
-    const browser = await chromium.launch( {headless: true });
+    const browser = await chromium.launch( {headless: false });
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -21,7 +24,32 @@ async function getSavedSession() {
     await page.context().storageState( {path: "./PlayWright/edurecAuth.json" });
     await browser.close();
 
+    await uploadSessionFile();
+
 };
+
+async function uploadSessionFile() {
+  const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
+  const supabaseKey = process.env.SUPABASE_PROJECT_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const filePath = './PlayWright/edurecAuth.json';
+  const fileName = 'sessions/edurecAuth.json'; 
+
+  const fileBuffer = fs.readFileSync(filePath);
+
+  const { data, error } = await supabase.storage
+    .from('edurec-bucket')   
+    .upload(fileName, fileBuffer, {
+      upsert: true,
+      contentType: 'application/json',
+    });
+
+  if (error) {
+    throw error;
+  }
+  console.log('File uploaded successfully:', data);
+}
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   getSavedSession().then(() => {
@@ -31,5 +59,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(1);
   });
 }
-export default getSavedSession;
 
