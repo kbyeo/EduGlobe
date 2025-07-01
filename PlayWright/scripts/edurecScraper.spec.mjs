@@ -3,9 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
-if (fs.existsSync('./PlayWright/eduglobe.env')) {
-  require('dotenv').config({ path: './PlayWright/eduglobe.env' });
-}
+dotenv.config({ path: './PlayWright/eduglobe.env' });
+
 //supabase auth
 const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
 const supabaseKey = process.env.SUPABASE_PROJECT_KEY;
@@ -30,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true, slowMo: 100 });
+  const browser = await chromium.launch({ headless: false, slowMo: 100 });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA

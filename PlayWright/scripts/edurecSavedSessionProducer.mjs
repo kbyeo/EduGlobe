@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './PlayWright/eduglobe.env' });
 
 async function getSavedSession() {
-    const browser = await chromium.launch( {headless: false });
+    const browser = await chromium.launch( {headless: true });
     const context = await browser.newContext();
     const page = await context.newPage();
 
