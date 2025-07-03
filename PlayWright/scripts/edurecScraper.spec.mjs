@@ -29,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true, slowMo: 100 });
+  const browser = await chromium.launch({ headless: true });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
@@ -84,7 +84,7 @@ async function runScraper() {
       return; 
     }
   
-  //Navigsting to EduRec mappings page  
+  //Navigating to EduRec mappings page  
   await page.locator('#N_STDACAD_SHORTCUT').click();
   await page.getByRole('link', { name: 'Global Education' }).click();
 
@@ -99,24 +99,38 @@ async function runScraper() {
   //function to download mapping from each faculty
   async function downloadFacultyMappings(faculty) {
     await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+    console.log('look up faculty')
     await ptModFrame.getByLabel('Search by:').selectOption('2');
+    console.log('select option 2')
+
     await ptModFrame.getByRole('button', { name: 'Look Up' }).click();
+    console.log('look up')
+
     await ptModFrame.getByRole('link', { name: faculty, exact: true }).click();
+    console.log('click through the faculties')
+
     await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
+    console.log('click fetch mappings')
+
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
+    console.log('wait for download button')
 
     const downloadPromise = page.waitForEvent('download');
+    console.log('expecting download')
+
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).click();
+    console.log('download')
 
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
     const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
 
     const download = await downloadPromise;
     const downloadPath = await download.path();
-
+    console.log('after download path')
     const fileName = `${timestamp}/${safeFileName}.xls`;
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
+    console.log('uploading')
     const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
