@@ -29,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
@@ -103,8 +103,6 @@ async function runScraper() {
     await page.getByRole('link', { name: 'Search Course Mappings' }).click();
 
     const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
-    
-
 
     await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
     console.log('look up faculty')
@@ -118,7 +116,18 @@ async function runScraper() {
     console.log('click the faculties')
 
     await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
-    console.log('click fetch mappings')
+    console.log('fetching mappings')
+
+
+    const mainFrame1 = page.frame({ name: 'main_target_win2' });
+    if (!mainFrame1) throw new Error('Main Content iframe not found');
+
+    // Wait until spinner display is none or visibility hidden
+    await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    console.log('Loading spinner gone — mappings loaded');
+
+
+
 
     //await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     
