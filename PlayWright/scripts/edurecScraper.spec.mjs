@@ -29,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
@@ -98,7 +98,7 @@ async function runScraper() {
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    const mainFrame = page.frameLocator('iframe[title="Main Content"]');
+    const mainFrame = page.frameLocator('iframe#main_target_win2'); // dynamically updated ID, handle carefully
     await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
     await page.getByRole('link', { name: 'Search Course Mappings' }).click();
 
@@ -119,11 +119,10 @@ async function runScraper() {
     console.log('fetching mappings')
 
 
-    const mainFrame1 = page.frame({ name: 'main_target_win2' });
-    if (!mainFrame1) throw new Error('Main Content iframe not found');
+    if (!mainFrame) throw new Error('Main Content iframe not found');
 
     // Wait until spinner display is none or visibility hidden
-    await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    await mainFrame.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
     console.log('Loading spinner gone — mappings loaded');
 
 
