@@ -115,15 +115,7 @@ async function runScraper() {
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     console.log('wait for download button')
 
-    const downloadBtn = mainFrame.getByRole('button', { name: 'Download Partner University' });
-
-    const isVisible = await downloadBtn.isVisible();
-    const isEnabled = await downloadBtn.isEnabled();
-    console.log('Download button visible:', isVisible, 'enabled:', isEnabled);
-
-    if (!isVisible || !isEnabled) {
-      throw new Error('Download button not ready');
-    }
+  
     await new Promise(r => setTimeout(r, 1000)); // small delay before click
 
     console.log('starting download...');
@@ -131,10 +123,14 @@ async function runScraper() {
       page.waitForEvent('download'),
       mainFrame.getByRole('button', { name: 'Download Partner University' }).click(),
     ]);
+    
+    console.log('downloaded');
 
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
-    const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
+    console.log('found faculty name');
 
+    const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
+    
     const downloadPath = await download.path();
     console.log('after download path')
     const fileName = `${timestamp}/${safeFileName}.xls`;
