@@ -29,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
@@ -88,16 +88,24 @@ async function runScraper() {
   await page.locator('#N_STDACAD_SHORTCUT').click();
   await page.getByRole('link', { name: 'Global Education' }).click();
 
-  const mainFrame = page.frameLocator('iframe[title="Main Content"]');
-  await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
-  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
 
-  const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
 
-  await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+
+  //await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
 
   //function to download mapping from each faculty
   async function downloadFacultyMappings(faculty) {
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    const mainFrame = page.frameLocator('iframe[title="Main Content"]');
+    await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
+    await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+
+    const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
+    
+
+
     await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
     console.log('look up faculty')
     await ptModFrame.getByLabel('Search by:').selectOption('2');
@@ -107,7 +115,7 @@ async function runScraper() {
     console.log('look up')
 
     await ptModFrame.getByRole('link', { name: faculty, exact: true }).click();
-    console.log('click through the faculties')
+    console.log('click the faculties')
 
     await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
     console.log('click fetch mappings')
@@ -116,11 +124,9 @@ async function runScraper() {
     
     // Wait for actual mapping content to show up
 
-
-    console.log('download button ready')
-
+    //console.log('download button ready')
   
-    await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
+    //await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
 
     console.log('starting download...');
     const [download] = await Promise.all([
@@ -155,6 +161,12 @@ async function runScraper() {
       console.log('Uploaded to Supabase:', data.path);
     }
   }
+
+  const mainFrame = page.frameLocator('iframe[title="Main Content"]');
+  await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
+  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+  const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
+  await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
 
   //get the number of faculties in the table
   await ptModFrame.locator('tbody tr td span[id^="RESULT4$"]').first().waitFor();
