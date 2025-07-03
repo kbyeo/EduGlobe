@@ -124,7 +124,7 @@ async function runScraper() {
       mainFrame.getByRole('button', { name: 'Download Partner University' }).click(),
     ]);
     
-    console.log('downloaded');
+    console.log('done');
 
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
     console.log('found faculty name');
