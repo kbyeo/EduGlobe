@@ -29,7 +29,7 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
