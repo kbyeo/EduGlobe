@@ -35,19 +35,26 @@ async function runScraper() {
   //saved session to avoid MFA
   storageState: './PlayWright/edurecAuth.json'
   });
+  const fileContents = fs.readFileSync('./PlayWright/edurecAuth.json', 'utf-8');
+  console.log('edurecAuth.json contents:\n', fileContents);
 
   //creates a new tab
   const page = await context.newPage();
-  
+  console.log('new tabbed open')
   // disable timeouts globally for this script
   page.setDefaultTimeout(0); 
 
 
   // Login + navigation
+  
   await page.goto('https://myedurec.nus.edu.sg/psp/cs90prd/?cmd=login&languageCd=ENG&');
+  console.log('in edurec')
+
   await page.locator('span').filter({ hasText: 'Please click here to login to' }).getByRole('link').click();
+  console.log('clicked login page')
 
   await page.waitForLoadState('networkidle');
+  console.log('wait for load state')
 
   //check if storage session does not exist or expired
   const isLoginPage = await page.getByRole('textbox', { name: 'User Account' }).count() > 0;

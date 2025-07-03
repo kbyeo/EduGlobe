@@ -21,6 +21,8 @@ async function downloadSession() {
   fs.writeFileSync('./PlayWright/edurecAuth.json', buffer);
 
   console.log('Session file downloaded successfully!');
+  const fileContents = fs.readFileSync('./PlayWright/edurecAuth.json', 'utf-8');
+  console.log('edurecAuth.json contents:\n', fileContents);
 }
 
 downloadSession().catch(err => {
