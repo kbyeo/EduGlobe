@@ -35,8 +35,8 @@ async function runScraper() {
   //saved session to avoid MFA
   storageState: './PlayWright/edurecAuth.json'
   });
-  const fileContents = fs.readFileSync('./PlayWright/edurecAuth.json', 'utf-8');
-  console.log('edurecAuth.json contents:\n', fileContents);
+  //const fileContents = fs.readFileSync('./PlayWright/edurecAuth.json', 'utf-8');
+  //console.log('edurecAuth.json contents:\n', fileContents);
 
   //creates a new tab
   const page = await context.newPage();
@@ -115,16 +115,15 @@ async function runScraper() {
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     console.log('wait for download button')
 
-    const downloadPromise = page.waitForEvent('download');
-    console.log('expecting download')
-
-    await mainFrame.getByRole('button', { name: 'Download Partner University' }).click();
-    console.log('download')
+    console.log('starting download...');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      mainFrame.getByRole('button', { name: 'Download Partner University' }).click(),
+    ]);
 
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
     const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
 
-    const download = await downloadPromise;
     const downloadPath = await download.path();
     console.log('after download path')
     const fileName = `${timestamp}/${safeFileName}.xls`;
