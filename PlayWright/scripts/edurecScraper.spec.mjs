@@ -115,6 +115,8 @@ async function runScraper() {
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     console.log('wait for download button')
 
+    const downloadBtn = mainFrame.getByRole('button', { name: 'Download Partner University' });
+
     const isVisible = await downloadBtn.isVisible();
     const isEnabled = await downloadBtn.isEnabled();
     console.log('Download button visible:', isVisible, 'enabled:', isEnabled);
