@@ -115,6 +115,15 @@ async function runScraper() {
     await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     console.log('wait for download button')
 
+    const isVisible = await downloadBtn.isVisible();
+    const isEnabled = await downloadBtn.isEnabled();
+    console.log('Download button visible:', isVisible, 'enabled:', isEnabled);
+
+    if (!isVisible || !isEnabled) {
+      throw new Error('Download button not ready');
+    }
+    await new Promise(r => setTimeout(r, 1000)); // small delay before click
+
     console.log('starting download...');
     const [download] = await Promise.all([
       page.waitForEvent('download'),
