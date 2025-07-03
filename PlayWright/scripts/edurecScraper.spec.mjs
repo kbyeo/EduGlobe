@@ -112,11 +112,15 @@ async function runScraper() {
     await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
     console.log('click fetch mappings')
 
-    await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
-    console.log('wait for download button')
+    //await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
+    
+    // Wait for actual mapping content to show up
+
+
+    console.log('download button ready')
 
   
-    await new Promise(r => setTimeout(r, 1000)); // small delay before click
+    await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
 
     console.log('starting download...');
     const [download] = await Promise.all([
