@@ -157,7 +157,7 @@ async function runScraper() {
     //await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
     const downloadBtn = mainFrame.locator('#N_EXSP_DRVD\\$hexcel\\$0');
     const isVisible = await downloadBtn.isVisible();
-const isEnabled = await downloadBtn.isEnabled();
+  const isEnabled = await downloadBtn.isEnabled();
 
 console.log('Button visible:', isVisible);
 console.log('Button enabled:', isEnabled);
