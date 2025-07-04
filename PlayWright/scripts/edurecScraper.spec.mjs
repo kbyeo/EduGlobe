@@ -132,8 +132,9 @@ async function runScraper() {
 
     // Force click inside browser context
     await mainFrame.evaluate(() => {
+      //find the button
       const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
-      if (btn) {
+      if (btn) { //if btn is not null
         // Force click ignoring any overlay or blockers
         btn.click();
       }
@@ -142,17 +143,16 @@ async function runScraper() {
     console.log('Forced click done, waiting for download...');
 
     const download = await downloadPromise;
-    const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
-    console.log('found faculty name');
+    console.log('downloaded')
 
-    const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
     
     const downloadPath = await download.path();
-    console.log('after download path')
-    const fileName = `${timestamp}/${safeFileName}.xls`;
+    console.log('getting download path')
+
+    const fileName = `${timestamp}/${faculty}.xls`;
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
-    console.log('uploading')
+    console.log('uploading to supabase bucket')
     const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -174,6 +174,7 @@ async function runScraper() {
   console.log('Number of faculties found:', facultyCount);
   //store all the faculties listed in an array from the table
   const facultyNames = [];
+  console.log('adding the faculties into an array')
   for (let i = 0; i < facultyCount; i++) {
     const facultyLocator = ptModFrame.locator(`tbody tr td span[id="RESULT4$${i}"]`);
     const name = await facultyLocator.innerText();
@@ -182,6 +183,7 @@ async function runScraper() {
   }
 
   await page.getByRole('button', { name: 'Close' }).click();
+  console.log('closed overlay')
   //loop through and download the xls file for each faculty with the function downloadFacultyMappings
   for (const facultyName of facultyNames) {
     console.log(`Processing faculty: ${facultyName}`);
@@ -190,9 +192,11 @@ async function runScraper() {
   }
 
   await browser.close();
+  console.log('finished scraping and uploading')
+
   //uploads the timestamp of when the scraper last ran into the bucket as a txt file
   const latest_update_timestamp = `latest_update_timestamp.txt`;
-  
+  console.log('uploading latest timestamp')
   const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -210,7 +214,7 @@ async function runScraper() {
   const end = Date.now();
   //get how long the script ran for
   const durationSeconds = ((end - start) / 1000).toFixed(2);
-  console.log(`Scraper ran for ${durationSeconds} seconds`);
+  console.log(`Script ran for ${durationSeconds} seconds`);
 
   // Returns the date for the output 
   return timestamp.split('_')[0];
