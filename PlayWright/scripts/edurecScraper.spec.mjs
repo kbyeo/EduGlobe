@@ -173,18 +173,10 @@ if (isVisible && isEnabled) {
       page.waitForEvent('download'),
       downloadBtn.click(),
     ]);*/
-try {
-  console.log('➡️ Attempting to click download button...');
-  await downloadBtn.scrollIntoViewIfNeeded();
-
-  await downloadBtn.click({ timeout: 5000 });
-  console.log('✅ Button clicked');
-} catch (err) {
-  console.error('❌ Click failed:', err);
-}  console.log('Button clicked');
-
-const download = await page.waitForEvent('download', { timeout: 5000 });
-console.log('Download received:', await download.suggestedFilename());
+  await mainFrame1.evaluate(() => {
+  const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
+  if (btn) btn.click();
+});
     
     console.log('done');
 
