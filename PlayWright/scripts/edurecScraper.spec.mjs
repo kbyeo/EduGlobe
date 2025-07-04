@@ -2,10 +2,6 @@ import { chromium } from 'playwright';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import path from 'path';
-var count = 0;
-const screenshotPath = `PlayWright/screenshots/${count}_error.png`;
-
 
 dotenv.config({ path: './PlayWright/eduglobe.env' });
 
@@ -62,7 +58,7 @@ async function runScraper() {
 
   //check if storage session does not exist or expired
   const isLoginPage = await page.getByRole('textbox', { name: 'User Account' }).count() > 0;
-  console.log(isLoginPage);
+  console.log("At login page: ", isLoginPage);
 
   if (isLoginPage) {
     // Session expired or no cookie, write to file and exit early. 
@@ -90,106 +86,62 @@ async function runScraper() {
   
   //Navigating to EduRec mappings page  
   await page.locator('#N_STDACAD_SHORTCUT').click();
+  console.log('clicked academics')
+
+  const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
   await page.getByRole('link', { name: 'Global Education' }).click();
+  console.log('clicked global education')
 
 
+  const mainFrameLocator = page.frameLocator('iframe[title="Main Content"]');
+  await mainFrameLocator.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
+  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+  console.log('clicked search course mappings')
 
-
-  //await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+  await mainFrameLocator.getByRole('button', { name: 'Look up Faculty' }).click();
+  console.log('clicked look up faculty to count and store faculties')
+  
 
   //function to download mapping from each faculty
   async function downloadFacultyMappings(faculty) {
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await mainFrameLocator.getByRole('button', { name: 'Look up Faculty' }).click();
+    console.log('clicked look up faculty')
 
-    const mainFrame = page.frameLocator('iframe[title="Main Content"]');
-    await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
-    await page.getByRole('link', { name: 'Search Course Mappings' }).click();
-
-    const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
-
-    await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
-    console.log('look up faculty')
     await ptModFrame.getByLabel('Search by:').selectOption('2');
-    console.log('select option 2')
+    console.log('selected option 2')
 
     await ptModFrame.getByRole('button', { name: 'Look Up' }).click();
-    console.log('look up')
+    console.log('clicked look up')
 
     await ptModFrame.getByRole('link', { name: faculty, exact: true }).click();
-    console.log('click the faculties')
+    console.log('clicking', faculty)
 
-    await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
+    await mainFrameLocator.getByRole('button', { name: 'Fetch Mappings' }).click();
     console.log('fetching mappings')
     
-
-       
-    const mainFrame1 = page.frame({ name: 'main_target_win2' });
-    if (!mainFrame1) throw new Error('Main Content iframe not found');
-
+    const mainFrame = page.frame({ name: 'main_target_win2' });
+    if (!mainFrame) throw new Error('Main Content iframe not found');
     // Wait until spinner display is none or visibility hidden
-    await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    await mainFrame.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
     console.log('Loading spinner gone — mappings loaded');
 
-  
-    /*await page.screenshot({ path: screenshotPath, fullPage: true });
-    const screenshotBuffer = fs.readFileSync(screenshotPath);
-    const screenshotFileName = `/screenshot/${Date.now()}.png`;
-    const { data, error } = await supabase
-      .storage
-      .from('edurec-bucket')
-      .upload(screenshotFileName, screenshotBuffer, {
-        contentType: 'image/png',
-        upsert: true,
-      });
-      count +=1;
+    // Listen once for the download event
+    const downloadPromise = new Promise(resolve => {
+      page.once('download', resolve);
+    });
 
-    if (error) {
-      console.error('Failed to upload screenshot:', error.message);
-    } else {
-      console.log('Screenshot uploaded to Supabase storage:', data.path);
-    }*/
+    // Force click inside browser context
+    await mainFrame.evaluate(() => {
+      const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
+      if (btn) {
+        // Force click ignoring any overlay or blockers
+        btn.click();
+      }
+    });
     
-    // Wait for actual mapping content to show up
+    console.log('Forced click done, waiting for download...');
 
-    //console.log('download button ready')
-  
-    //await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
-    const downloadBtn = mainFrame.locator('#N_EXSP_DRVD\\$hexcel\\$0');
-    const isVisible = await downloadBtn.isVisible();
-  const isEnabled = await downloadBtn.isEnabled();
-
-console.log('Button visible:', isVisible);
-console.log('Button enabled:', isEnabled);
-
-if (isVisible && isEnabled) {
-  console.log('Button is ready to be clicked');
-} else {
-  console.log('Button is NOT ready to be clicked');
-}
-
-    /*console.log('starting download...');
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      downloadBtn.click(),
-    ]);*/
-// Listen once for the download event
-const downloadPromise = new Promise(resolve => {
-  page.once('download', resolve);
-});
-
-// Force click inside browser context
-await mainFrame1.evaluate(() => {
-  const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
-  if (btn) {
-    // Force click ignoring any overlay or blockers
-    btn.click();
-  }
-});
-    
-console.log('Forced click done, waiting for download...');
-
-const download = await downloadPromise;
+    const download = await downloadPromise;
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
     console.log('found faculty name');
 
@@ -215,12 +167,6 @@ const download = await downloadPromise;
       console.log('Uploaded to Supabase:', data.path);
     }
   }
-
-  const mainFrame = page.frameLocator('iframe[title="Main Content"]');
-  await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
-  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
-  const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
-  await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
 
   //get the number of faculties in the table
   await ptModFrame.locator('tbody tr td span[id^="RESULT4$"]').first().waitFor();
