@@ -173,8 +173,13 @@ if (isVisible && isEnabled) {
       page.waitForEvent('download'),
       downloadBtn.click(),
     ]);*/
-    await downloadBtn.click();
-console.log('Button clicked');
+try {
+  console.log('➡️ Attempting to click download button...');
+  const clicked = await downloadBtn.click({ timeout: 5000 });
+  console.log('✅ Button clicked');
+} catch (err) {
+  console.error('❌ Click failed:', err);
+}  console.log('Button clicked');
 
 const download = await page.waitForEvent('download', { timeout: 5000 });
 console.log('Download received:', await download.suggestedFilename());
