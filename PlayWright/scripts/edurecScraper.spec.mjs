@@ -134,7 +134,7 @@ async function runScraper() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
     const screenshotBuffer = fs.readFileSync(screenshotPath);
     const screenshotFileName = `/screenshot/${Date.now()}.png`;
-    const { data, error } = await supabase
+    /*const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
       .upload(screenshotFileName, screenshotBuffer, {
@@ -147,19 +147,19 @@ async function runScraper() {
       console.error('Failed to upload screenshot:', error.message);
     } else {
       console.log('Screenshot uploaded to Supabase storage:', data.path);
-    }
-    //await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
+    }*/
     
     // Wait for actual mapping content to show up
 
     //console.log('download button ready')
   
     //await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
+    const downloadBtn = mainFrame.locator('#N_EXSP_DRVD\\$hexcel\\$0');
 
     console.log('starting download...');
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      mainFrame.getByRole('button', { name: 'Download Partner University' }).click(),
+      downloadBtn.click(),
     ]);
     
     console.log('done');
@@ -175,7 +175,7 @@ async function runScraper() {
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
     console.log('uploading')
-    /*const { data, error } = await supabase
+    const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
       .upload(fileName, fileBuffer, {
@@ -187,7 +187,7 @@ async function runScraper() {
       console.error('Upload failed:', error.message);
     } else {
       console.log('Uploaded to Supabase:', data.path);
-    }*/
+    }
   }
 
   const mainFrame = page.frameLocator('iframe[title="Main Content"]');
