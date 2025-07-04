@@ -29,29 +29,36 @@ const timestamp =
 //function to login and go to mappings page
 async function runScraper() {
   //launches browswer and saves it as browser to use as a handle later
-  const browser = await chromium.launch({ headless: true, slowMo: 100 });
+  const browser = await chromium.launch({ headless: true });
   //creates a new isolated browser environment
   const context = await browser.newContext({
   //saved session to avoid MFA
   storageState: './PlayWright/edurecAuth.json'
   });
+  //const fileContents = fs.readFileSync('./PlayWright/edurecAuth.json', 'utf-8');
+  //console.log('edurecAuth.json contents:\n', fileContents);
 
   //creates a new tab
   const page = await context.newPage();
-  
+  console.log('new tabbed open')
   // disable timeouts globally for this script
   page.setDefaultTimeout(0); 
 
 
   // Login + navigation
+  
   await page.goto('https://myedurec.nus.edu.sg/psp/cs90prd/?cmd=login&languageCd=ENG&');
+  console.log('in edurec')
+
   await page.locator('span').filter({ hasText: 'Please click here to login to' }).getByRole('link').click();
+  console.log('clicked login page')
 
   await page.waitForLoadState('networkidle');
+  console.log('wait for load state')
 
   //check if storage session does not exist or expired
   const isLoginPage = await page.getByRole('textbox', { name: 'User Account' }).count() > 0;
-  console.log(isLoginPage);
+  console.log("At login page: ", isLoginPage);
 
   if (isLoginPage) {
     // Session expired or no cookie, write to file and exit early. 
@@ -77,39 +84,75 @@ async function runScraper() {
       return; 
     }
   
-  //Navigsting to EduRec mappings page  
+  //Navigating to EduRec mappings page  
   await page.locator('#N_STDACAD_SHORTCUT').click();
-  await page.getByRole('link', { name: 'Global Education' }).click();
-
-  const mainFrame = page.frameLocator('iframe[title="Main Content"]');
-  await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
-  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+  console.log('clicked academics')
 
   const ptModFrame = page.frameLocator('iframe[name^="ptModFrame_"]');
+  await page.getByRole('link', { name: 'Global Education' }).click();
+  console.log('clicked global education')
 
-  await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+
+  const mainFrameLocator = page.frameLocator('iframe[title="Main Content"]');
+  await mainFrameLocator.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
+  await page.getByRole('link', { name: 'Search Course Mappings' }).click();
+  console.log('clicked search course mappings')
+
+  await mainFrameLocator.getByRole('button', { name: 'Look up Faculty' }).click();
+  console.log('clicked look up faculty to count and store faculties')
+  
 
   //function to download mapping from each faculty
   async function downloadFacultyMappings(faculty) {
-    await mainFrame.getByRole('button', { name: 'Look up Faculty' }).click();
+    await mainFrameLocator.getByRole('button', { name: 'Look up Faculty' }).click();
+    console.log('clicked look up faculty')
+
     await ptModFrame.getByLabel('Search by:').selectOption('2');
+    console.log('selected option 2')
+
     await ptModFrame.getByRole('button', { name: 'Look Up' }).click();
+    console.log('clicked look up')
+
     await ptModFrame.getByRole('link', { name: faculty, exact: true }).click();
-    await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
-    await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
+    console.log('clicking', faculty)
 
-    const downloadPromise = page.waitForEvent('download');
-    await mainFrame.getByRole('button', { name: 'Download Partner University' }).click();
+    await mainFrameLocator.getByRole('button', { name: 'Fetch Mappings' }).click();
+    console.log('fetching mappings')
+    
+    const mainFrame = page.frame({ name: 'main_target_win2' });
+    if (!mainFrame) throw new Error('Main Content iframe not found');
+    // Wait until spinner display is none or visibility hidden
+    await mainFrame.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    console.log('Loading spinner gone — mappings loaded');
 
-    const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
-    const safeFileName = facultyName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').trim();
+    // Listen once for the download event
+    const downloadPromise = new Promise(resolve => {
+      page.once('download', resolve);
+    });
+
+    // Force click inside browser context
+    await mainFrame.evaluate(() => {
+      //find the button
+      const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
+      if (btn) { //if btn is not null
+        // Force click ignoring any overlay or blockers
+        btn.click();
+      }
+    });
+    
+    console.log('Forced click done, waiting for download...');
 
     const download = await downloadPromise;
-    const downloadPath = await download.path();
+    console.log('downloaded')
 
-    const fileName = `${timestamp}/${safeFileName}.xls`;
+    
+    const downloadPath = await download.path();
+    console.log('getting download path')
+
+    const fileName = `${timestamp}/${faculty}.xls`;
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
+    console.log('uploading to supabase bucket')
     const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -131,6 +174,7 @@ async function runScraper() {
   console.log('Number of faculties found:', facultyCount);
   //store all the faculties listed in an array from the table
   const facultyNames = [];
+  console.log('adding the faculties into an array')
   for (let i = 0; i < facultyCount; i++) {
     const facultyLocator = ptModFrame.locator(`tbody tr td span[id="RESULT4$${i}"]`);
     const name = await facultyLocator.innerText();
@@ -139,6 +183,7 @@ async function runScraper() {
   }
 
   await page.getByRole('button', { name: 'Close' }).click();
+  console.log('closed overlay')
   //loop through and download the xls file for each faculty with the function downloadFacultyMappings
   for (const facultyName of facultyNames) {
     console.log(`Processing faculty: ${facultyName}`);
@@ -147,9 +192,11 @@ async function runScraper() {
   }
 
   await browser.close();
+  console.log('finished scraping and uploading')
+
   //uploads the timestamp of when the scraper last ran into the bucket as a txt file
   const latest_update_timestamp = `latest_update_timestamp.txt`;
-  
+  console.log('uploading latest timestamp')
   const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -167,7 +214,7 @@ async function runScraper() {
   const end = Date.now();
   //get how long the script ran for
   const durationSeconds = ((end - start) / 1000).toFixed(2);
-  console.log(`Scraper ran for ${durationSeconds} seconds`);
+  console.log(`Script ran for ${durationSeconds} seconds`);
 
   // Returns the date for the output 
   return timestamp.split('_')[0];
