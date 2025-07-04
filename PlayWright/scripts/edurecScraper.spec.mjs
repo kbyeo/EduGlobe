@@ -168,11 +168,16 @@ if (isVisible && isEnabled) {
   console.log('Button is NOT ready to be clicked');
 }
 
-    console.log('starting download...');
+    /*console.log('starting download...');
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       downloadBtn.click(),
-    ]);
+    ]);*/
+    await downloadBtn.click();
+console.log('Button clicked');
+
+const download = await page.waitForEvent('download', { timeout: 5000 });
+console.log('Download received:', await download.suggestedFilename());
     
     console.log('done');
 
