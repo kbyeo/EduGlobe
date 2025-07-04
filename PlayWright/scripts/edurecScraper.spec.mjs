@@ -131,32 +131,7 @@ async function runScraper() {
     await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
     console.log('Loading spinner gone — mappings loaded');
 
-    const buttonDebug = await mainFrame.evaluate(() => {
-  const btn = [...document.querySelectorAll('a.PSHYPERLINK')].find(el =>
-    el.textContent.includes('Download Partner University')
-  );
-  if (!btn) return '❌ Button not found';
-
-  const rect = btn.getBoundingClientRect();
-  return {
-    found: true,
-    visible: !!(rect.width && rect.height),
-    enabled: !btn.disabled,
-    innerText: btn.innerText,
-    outerHTML: btn.outerHTML,
-    onclick: btn.getAttribute('onclick'),
-    href: btn.getAttribute('href'),
-  };
-});
-console.log('🔍 Button debug info:', buttonDebug);
-
-// 3. If button not found — dump full HTML to a file
-if (!buttonDebug.found) {
-  const html = await mainFrame.evaluate(() => document.documentElement.outerHTML);
-  const debugPath = `./debug-${Date.now()}.html`;
-  require('fs').writeFileSync(debugPath, html);
-  console.log(`❗ Dumped full HTML to ${debugPath}`);
-}
+  
     /*await page.screenshot({ path: screenshotPath, fullPage: true });
     const screenshotBuffer = fs.readFileSync(screenshotPath);
     const screenshotFileName = `/screenshot/${Date.now()}.png`;
@@ -181,6 +156,17 @@ if (!buttonDebug.found) {
   
     //await new Promise(r => setTimeout(r, 4 * 60 * 1000)); // small delay before click
     const downloadBtn = mainFrame.locator('#N_EXSP_DRVD\\$hexcel\\$0');
+    const isVisible = await downloadBtn.isVisible();
+const isEnabled = await downloadBtn.isEnabled();
+
+console.log('Button visible:', isVisible);
+console.log('Button enabled:', isEnabled);
+
+if (isVisible && isEnabled) {
+  console.log('Button is ready to be clicked');
+} else {
+  console.log('Button is NOT ready to be clicked');
+}
 
     console.log('starting download...');
     const [download] = await Promise.all([
