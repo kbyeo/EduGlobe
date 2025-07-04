@@ -151,7 +151,8 @@ async function main() {
         //console.log(insertSQL);
         //console.log(values);
         
-        //insertSQL is an parameterised query string
+        //insertSQL is an parameterised query string (placeholders), values are the values being inserted 
+        //into the parameterised query string
         await pgClient.query(insertSQL, values);
         console.log(`Inserted batch rows: ${batch.length}`);
         }
@@ -163,6 +164,15 @@ async function main() {
         //finalise the transaction
         await pgClient.query('COMMIT');
         console.log('Table swap successful');
+
+        await pgClient.query(`
+        ALTER TABLE edurec_mappings
+        ADD CONSTRAINT fk_partner_university
+        FOREIGN KEY (partner_university)
+        REFERENCES country(partner_university)
+        ON DELETE SET NULL;
+        `);
+        console.log('foreign key added successfully');
 
     } catch (err) {
         //undo SQL operations if error
