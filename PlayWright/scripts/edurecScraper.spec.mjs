@@ -175,7 +175,9 @@ if (isVisible && isEnabled) {
     ]);*/
 try {
   console.log('➡️ Attempting to click download button...');
-  const clicked = await downloadBtn.click({ timeout: 5000 });
+  await downloadBtn.scrollIntoViewIfNeeded();
+
+  await downloadBtn.click({ timeout: 5000 });
   console.log('✅ Button clicked');
 } catch (err) {
   console.error('❌ Click failed:', err);
