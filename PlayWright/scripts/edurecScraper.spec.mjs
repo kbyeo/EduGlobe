@@ -131,10 +131,36 @@ async function runScraper() {
     await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
     console.log('Loading spinner gone — mappings loaded');
 
-    await page.screenshot({ path: screenshotPath, fullPage: true });
+    const buttonDebug = await mainFrame.evaluate(() => {
+  const btn = [...document.querySelectorAll('a.PSHYPERLINK')].find(el =>
+    el.textContent.includes('Download Partner University')
+  );
+  if (!btn) return '❌ Button not found';
+
+  const rect = btn.getBoundingClientRect();
+  return {
+    found: true,
+    visible: !!(rect.width && rect.height),
+    enabled: !btn.disabled,
+    innerText: btn.innerText,
+    outerHTML: btn.outerHTML,
+    onclick: btn.getAttribute('onclick'),
+    href: btn.getAttribute('href'),
+  };
+});
+console.log('🔍 Button debug info:', buttonDebug);
+
+// 3. If button not found — dump full HTML to a file
+if (!buttonDebug.found) {
+  const html = await mainFrame.evaluate(() => document.documentElement.outerHTML);
+  const debugPath = `./debug-${Date.now()}.html`;
+  require('fs').writeFileSync(debugPath, html);
+  console.log(`❗ Dumped full HTML to ${debugPath}`);
+}
+    /*await page.screenshot({ path: screenshotPath, fullPage: true });
     const screenshotBuffer = fs.readFileSync(screenshotPath);
     const screenshotFileName = `/screenshot/${Date.now()}.png`;
-    /*const { data, error } = await supabase
+    const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
       .upload(screenshotFileName, screenshotBuffer, {
