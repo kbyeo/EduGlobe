@@ -2,6 +2,10 @@ import { chromium } from 'playwright';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import path from 'path';
+var count = 0;
+const screenshotPath = `PlayWright/screenshots/${count}_error.png`;
+
 
 dotenv.config({ path: './PlayWright/eduglobe.env' });
 
@@ -98,7 +102,7 @@ async function runScraper() {
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    const mainFrame = page.frameLocator('iframe#main_target_win2'); // dynamically updated ID, handle carefully
+    const mainFrame = page.frameLocator('iframe[title="Main Content"]');
     await mainFrame.locator('img[alt="Search for Programs"]').waitFor({ state: 'visible' });
     await page.getByRole('link', { name: 'Search Course Mappings' }).click();
 
@@ -117,17 +121,33 @@ async function runScraper() {
 
     await mainFrame.getByRole('button', { name: 'Fetch Mappings' }).click();
     console.log('fetching mappings')
+    
 
-
-    if (!mainFrame) throw new Error('Main Content iframe not found');
+       
+    const mainFrame1 = page.frame({ name: 'main_target_win2' });
+    if (!mainFrame1) throw new Error('Main Content iframe not found');
 
     // Wait until spinner display is none or visibility hidden
-    await mainFrame.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    await mainFrame1.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
     console.log('Loading spinner gone — mappings loaded');
 
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+    const screenshotBuffer = fs.readFileSync(screenshotPath);
+    const screenshotFileName = `/screenshot/${Date.now()}.png`;
+    const { data, error } = await supabase
+      .storage
+      .from('edurec-bucket')
+      .upload(screenshotFileName, screenshotBuffer, {
+        contentType: 'image/png',
+        upsert: true,
+      });
+      count +=1;
 
-
-
+    if (error) {
+      console.error('Failed to upload screenshot:', error.message);
+    } else {
+      console.log('Screenshot uploaded to Supabase storage:', data.path);
+    }
     //await mainFrame.getByRole('button', { name: 'Download Partner University' }).waitFor({ state: 'visible' });
     
     // Wait for actual mapping content to show up
@@ -155,7 +175,7 @@ async function runScraper() {
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
     console.log('uploading')
-    const { data, error } = await supabase
+    /*const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
       .upload(fileName, fileBuffer, {
@@ -167,7 +187,7 @@ async function runScraper() {
       console.error('Upload failed:', error.message);
     } else {
       console.log('Uploaded to Supabase:', data.path);
-    }
+    }*/
   }
 
   const mainFrame = page.frameLocator('iframe[title="Main Content"]');
