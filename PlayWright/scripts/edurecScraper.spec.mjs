@@ -173,13 +173,23 @@ if (isVisible && isEnabled) {
       page.waitForEvent('download'),
       downloadBtn.click(),
     ]);*/
-  await mainFrame1.evaluate(() => {
+// Listen once for the download event
+const downloadPromise = new Promise(resolve => {
+  page.once('download', resolve);
+});
+
+// Force click inside browser context
+await mainFrame1.evaluate(() => {
   const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');
-  if (btn) btn.click();
+  if (btn) {
+    // Force click ignoring any overlay or blockers
+    btn.click();
+  }
 });
     
-    console.log('done');
+console.log('Forced click done, waiting for download...');
 
+const download = await downloadPromise;
     const facultyName = await mainFrame.locator('#ACAD_GROUP_TBL_DESCR').innerText();
     console.log('found faculty name');
 
