@@ -1,0 +1,49 @@
+.aura-section{
+    margin-top: 0px;
+    display:inline-flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content:center;
+    padding:4px 8px;
+
+    margin-bottom: 0px;
+
+    background-color: #1d1d1d;
+    border-radius:9999px;
+    max-width: 78px;
+
+
+
+}
+
+.aura-points {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0px 0px;
+    color: #b7b7b7;
+    font-variant-numeric: tabular-nums;
+    flex:0 0 3ch;
+}
+
+.aura-section .upvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 3px;
+    margin-right: 0px;
+
+}
+
+.aura-section .downvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 0px;
+    margin-right: 3px;
+
+
+}

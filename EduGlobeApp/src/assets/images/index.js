@@ -14,6 +14,8 @@ import notificationSelected from './notification-selected.png';
 import messageSelected from './message-selected.png';
 import profilePlaceholderSelected from './profile-placeholder-selected.png';
 import settingsSelected from './settings-selected.png';
+import upvoteSelected from './review-upvote-icon-selected.png';
+import downvoteSelected from './review-downvote-icon-selected.png';
 
 import dashboardUnselected from './dashboard-unselected.png';
 import discoverUnselected from './discover-unselected.png';
@@ -22,6 +24,8 @@ import notificationUnselected from './notification-unselected.png';
 import messageUnselected from './message-unselected.png';
 import profilePlaceholderUnselected from './profile-placeholder.png';
 import settingsUnselected from './settings-unselected.png';
+import upvoteUnselected from './review-upvote-icon-unselected.png';
+import downvoteUnselected from './review-downvote-icon-unselected.png';
 
 import filterIcon from './filter.png';
 
@@ -48,6 +52,8 @@ export default {
     message: messageSelected,
     profile: profilePlaceholderSelected,
     settings: settingsSelected,
+    upvote: upvoteSelected,
+    downvote: downvoteSelected,
   },
 
   unselected: {
@@ -58,5 +64,7 @@ export default {
     message: messageUnselected,
     profile: profilePlaceholderUnselected,
     settings: settingsUnselected,
+    upvote: upvoteUnselected,
+    downvote: downvoteUnselected,
   }
 };

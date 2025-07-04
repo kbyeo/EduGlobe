@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import supabaseClients from "../supabaseClient";
+import ReviewAura from "./ReviewAura.jsx"
 import images from '../assets/images';
 import "./CourseDetails.css"
 const { supabase, mappings } = supabaseClients;
@@ -34,7 +35,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
             .from("reviews")
             .select("*")
             .eq("pu_course", selectedRowData.pu_course_1)
-            .order("created_at", { ascending: false });
+            .order("aura", { ascending: false });
           if (isMounted) {
             if (error) setError(error.message);
             else       setReviews(data);
@@ -107,7 +108,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
 
                     </div>
                     <div className="course-info-description">
-                        <p className="mapping-direction-add">Country ○ {selectedRowData.pre_approved ? "Pre-approved" : "Not pre-approved"}</p>
+                        <p className="mapping-direction-add">{selectedRowData.country} ○ {selectedRowData.pre_approved ? "Pre-approved" : "Not pre-approved"}</p>
                         <p className="mapping-direction">NUS ({selectedRowData.nus_course_1}, {selectedRowData.nus_crse1_units} units)
                                                     --> {selectedRowData.partner_university} ({selectedRowData.pu_course_1}, {selectedRowData.pu_crse1_units} units)</p>
                         <p>{selectedCourseDescription.description}</p>
@@ -158,6 +159,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
                                             </p>
 
                                             <p className="review-body">{r.body}</p>
+                                            <ReviewAura reviewId={r.id} currentUserId={userProfile.user_id}/>
                                         </div>
                                     </li>
                                 ))}

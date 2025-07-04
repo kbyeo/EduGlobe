@@ -81,7 +81,8 @@ function Discover({ id, setId }) {
         user_email: email,
         user_year_of_study: yearOfStudy,
         user_course_of_study: courseOfStudy,
-        user_avatar: userAvatar
+        user_avatar: userAvatar,
+        user_id: id
     };
 
     useEffect(() => {
@@ -128,13 +129,14 @@ function Discover({ id, setId }) {
                 adjustedQuery = "nus business school";
             }
 
-            const { data, error } = await mappings.from("edurec_mappings")
+            const { data, error } = await mappings.from("v_edurec_mappings_with_country")
                                                   .select("*")
                                                   .or(`faculty.ilike.%${adjustedQuery}%,` +
                                                       `partner_university.ilike.%${adjustedQuery}%,` +
                                                       `pu_course_1.ilike.%${adjustedQuery}%,` +
                                                       `nus_course_1.ilike.%${adjustedQuery}%,` +
-                                                      `nus_course_1_title.ilike.%${adjustedQuery}%`);
+                                                      `nus_course_1_title.ilike.%${adjustedQuery}%,` +
+                                                      `country.ilike.%${adjustedQuery}%`);
 
             if (error) {
                 console.error("Search failed: ", error.message);
@@ -188,7 +190,7 @@ function Discover({ id, setId }) {
     const filtered = useMemo(() => {
         return filterResults.filter(r =>
             (filterFacultyParam ? r.faculty === filterFacultyParam : true) &&
-            (filterCountryParam ? r.faculty === filterCountryParam : true) &&
+            (filterCountryParam ? r.country === filterCountryParam : true) &&
             (filterPUParam ? r.partner_university === filterPUParam : true) &&
             (filterCourseCodeParam ? r.nus_course_1 === filterCourseCodeParam : true) &&
             (filterApprovedParam ? (r.pre_approved ? "Yes" : "No") === filterApprovedParam : true)
@@ -210,7 +212,7 @@ function Discover({ id, setId }) {
         () => Array.from(
           new Set(
             filtered
-              .map(r => r.faculty)
+              .map(r => r.country)
               .filter(Boolean)           //skips empty / null
           )
         ),
@@ -432,7 +434,7 @@ function Discover({ id, setId }) {
                                             {currentRows.map((result, index) => (
                                               <tr key={index} onClick={() => handleRowClick(result)}>
                                                 <td>{result.faculty}</td>
-                                                <td>{result.faculty}</td>
+                                                <td>{result.country}</td>
                                                 <td>{result.partner_university}</td>
                                                 <td>{result.pu_course_1}</td>
                                                 <td>{result.pu_course_1_title}</td>

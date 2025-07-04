@@ -224,7 +224,7 @@
 }
 
 .review-buttons .submit-review-button:not(:disabled) {
-  background: #490885;  /* YouTube primary blue */
+  background: #490885;
   color: #e8e8e8;
 }
 .review-buttons .submit-review-button:not(:disabled):hover {
@@ -246,7 +246,7 @@
 .reviews .reviews-list .review-card {
     margin-left: 0px;
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom:20px;
 
 }
 
@@ -293,6 +293,7 @@
     word-wrap: break-word;
     white-space: pre-wrap;       /* keep user-typed line breaks */
       word-break: break-all;       /* *only* if you still see overflow in edge cases */
+    margin-bottom: 8px;
 
 
 }
@@ -320,7 +321,7 @@
   cursor: pointer;
   transition: ease 0.2s;
   align-self: flex-end;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
   width: 100%;
 
 
@@ -333,4 +334,30 @@
 .back-to-top-button:hover {
   background-color: #490885;
   color: #ffffff;
+}
+
+
+.aura-section{
+    margin-top: 0px;
+    display: flex;
+    flex-direction: row;
+
+    margin-bottom: 0px;
+}
+
+.aura-points {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    align-self: center;
+    font-size: 0.9rem;
+    margin: 0px 3px;
+}
+
+.aura-section img {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+
+
 }
