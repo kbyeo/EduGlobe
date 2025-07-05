@@ -89,9 +89,8 @@ async function main() {
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             //converts the rows in the sheet into json format, each object represents a row
             const rows = xlsx.utils.sheet_to_json(sheet);
-            console.log(`File: ${file.name} - Number of rows: ${rows.length}`);
 
-
+            console.log(`Transforming and Reshaping File: ${file.name} - Number of rows: ${rows.length}`);
             for (const row of rows) {
             // Adjust type conversion for Supabase schema and appends all the rows to the allRows array
             allRows.push({
@@ -125,7 +124,7 @@ async function main() {
         const values = [];
         //store the index / placeholder
         const params = [];
-        
+
         //push the batch value and index into the respective arrays
         batch.forEach((row, i) => {
             columns.forEach((col, j) => {
@@ -133,7 +132,8 @@ async function main() {
             values.push(row[col]);
             });
         });
-
+        
+        console.log('pushing data into staging table...')
         //flatten and insert the batch data into the supabase database staging table
         const insertSQL = `
             INSERT INTO edurec_mappings_staging (${columns.join(', ')})
@@ -158,7 +158,9 @@ async function main() {
         }
 
         //Swap tables atomically
-        await pgClient.query('DROP TABLE IF EXISTS edurec_mappings');
+        console.log('dropping edurec mappings and view')
+        await pgClient.query('DROP TABLE IF EXISTS edurec_mappings CASCADE');
+        console.log('renaming staging table')
         await pgClient.query('ALTER TABLE edurec_mappings_staging RENAME TO edurec_mappings');
 
         //finalise the transaction
@@ -173,6 +175,19 @@ async function main() {
         ON DELETE SET NULL;
         `);
         console.log('foreign key added successfully');
+
+        await pgClient.query(`
+          CREATE VIEW edurec_mappings_with_country_view AS
+          SELECT
+            edurec_mappings.*,
+            country.country
+          FROM
+            edurec_mappings 
+          LEFT JOIN
+            country
+            ON edurec_mappings.partner_university = country.partner_university;
+        `);
+        console.log('View edurec_mappings_with_country created');
 
     } catch (err) {
         //undo SQL operations if error

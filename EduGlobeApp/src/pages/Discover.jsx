@@ -129,7 +129,7 @@ function Discover({ id, setId }) {
                 adjustedQuery = "nus business school";
             }
 
-            const { data, error } = await mappings.from("v_edurec_mappings_with_country")
+            const { data, error } = await mappings.from("edurec_mappings_with_country_view")
                                                   .select("*")
                                                   .or(`faculty.ilike.%${adjustedQuery}%,` +
                                                       `partner_university.ilike.%${adjustedQuery}%,` +

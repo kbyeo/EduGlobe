@@ -122,7 +122,7 @@ async function runScraper() {
     const mainFrame = page.frame({ name: 'main_target_win2' });
     if (!mainFrame) throw new Error('Main Content iframe not found');
     // Wait until spinner display is none or visibility hidden
-    await mainFrame.waitForSelector('#WAIT_win2', { state: 'hidden', timeout: 240000 });
+    await mainFrameLocator.locator('#WAIT_win2').waitFor({ state: 'hidden' });
     console.log('Loading spinner gone — mappings loaded');
 
     // Listen once for the download event
