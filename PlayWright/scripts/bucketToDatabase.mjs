@@ -5,7 +5,7 @@ import { Client } from 'pg';
 
 
 //load env file from supabaseStorage.env into process.env
-dotenv.config({ path: './PlayWright/eduglobe.env' }); // adjust path if needed
+dotenv.config({ path: './PlayWright/eduglobe.env' }); 
 
 //get credentials to login into supabase
 const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
@@ -14,11 +14,11 @@ const supabaseKey = process.env.SUPABASE_PROJECT_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 //name of supabase bucketa
-const BUCKET_NAME = 'edurec-bucket'; // change if needed
+const BUCKET_NAME = 'edurec-bucket';
 
 //Using session pooler ipv4 connection
 const pgClient = new Client({
-  connectionString: process.env.SUPABASE_DATABASE_URL, // Make sure this is set in your env file
+  connectionString: process.env.SUPABASE_DATABASE_URL, 
 });
 
 //async function
@@ -65,6 +65,11 @@ async function main() {
         
         //array for json data
         const allRows = [];
+        const newPUs = [];
+        const currentPUs = await pgClient.query('SELECT partner_university FROM country');
+        //converts pus to array then set 
+        const knownPUs = currentPUs.rows.map(row => row.partner_university);
+
         for (const file of files) {
 
             //gets the path of each xls file 
@@ -92,6 +97,11 @@ async function main() {
 
             console.log(`Transforming and Reshaping File: ${file.name} - Number of rows: ${rows.length}`);
             for (const row of rows) {
+                //checking for new PUS
+                const pu = row['Partner University'];
+                if (pu && !knownPUs.includes(pu) && !newPUs.includes(pu)) {
+                        newPUs.push(pu);
+                }
             // Adjust type conversion for Supabase schema and appends all the rows to the allRows array
             allRows.push({
                     'faculty': row['Faculty'],
@@ -112,7 +122,22 @@ async function main() {
                 });
             }
         }
-            
+        
+        //upload new pus into country table
+        if (newPUs.length > 0) {
+        const placeholders = newPUs.map((_, i) => `($${i + 1}, 'Pending')`).join(', ');
+        await pgClient.query(
+            `INSERT INTO country (partner_university, country) VALUES ${placeholders}`,
+            newPUs
+        );
+        console.log(`Inserted ${newPUs.length} new partner universities with placeholder country.`);
+        } else {
+            console.log('no new PUs');
+        }
+        await pgClient.query('COMMIT');
+
+        console.log('Inserting Mappings into edurec_mappings...')
+        await pgClient.query('BEGIN');
         //push 2500 rows per batch
         const batchSize = 2500;
         const columns = Object.keys(allRows[0]);

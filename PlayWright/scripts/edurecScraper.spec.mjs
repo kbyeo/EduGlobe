@@ -15,16 +15,23 @@ const start = Date.now();
 
 //filename configuration
 const now = new Date();
-//pad the number with a 0 in front, example 5 -> 05
-const pad = (n) => n.toString().padStart(2, '0');
 
-const timestamp =
-  now.getFullYear() + '-' +
-  pad(now.getMonth() + 1) + '-' +
-  pad(now.getDate()) + '_' +
-  pad(now.getHours()) + '-' +
-  pad(now.getMinutes()) + '-' +
-  pad(now.getSeconds());
+const sgDate = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Singapore',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false
+}).formatToParts(now);
+
+// Convert parts to a timestamp string
+const parts = Object.fromEntries(sgDate.map(({ type, value }) => [type, value]));
+
+const timestamp = `${parts.year}-${parts.month}-${parts.day}_${parts.hour}:${parts.minute}:${parts.second}`;
+console.log(timestamp); // e.g. "2025-07-05_22-42-11"
 
 //function to login and go to mappings page
 async function runScraper() {
@@ -121,6 +128,7 @@ async function runScraper() {
     
     const mainFrame = page.frame({ name: 'main_target_win2' });
     if (!mainFrame) throw new Error('Main Content iframe not found');
+
     // Wait until spinner display is none or visibility hidden
     await mainFrameLocator.locator('#WAIT_win2').waitFor({ state: 'hidden' });
     console.log('Loading spinner gone — mappings loaded');
@@ -130,7 +138,6 @@ async function runScraper() {
       page.once('download', resolve);
     });
 
-    // Force click inside browser context
     await mainFrame.evaluate(() => {
       //find the button
       const btn = document.querySelector('#N_EXSP_DRVD\\$hexcel\\$0');

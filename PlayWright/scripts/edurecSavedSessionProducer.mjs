@@ -38,6 +38,7 @@ async function uploadSessionFile() {
 
   const fileBuffer = fs.readFileSync(filePath);
 
+  //uploads edurec.auth to supabase bucket
   const { data, error } = await supabase.storage
     .from('edurec-bucket')   
     .upload(fileName, fileBuffer, {
