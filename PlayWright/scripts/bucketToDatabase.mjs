@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import xlsx from 'xlsx';
 import { Client } from 'pg';
+import he from 'he';
 
 
 //load env file from supabaseStorage.env into process.env
@@ -20,6 +21,13 @@ const BUCKET_NAME = 'edurec-bucket';
 const pgClient = new Client({
   connectionString: process.env.SUPABASE_DATABASE_URL, 
 });
+
+function decodeHtmlEntities(text) {
+  if (typeof text === 'string') {
+    return he.decode(text);
+  }
+  return text;
+}
 
 //async function
 async function main() {
@@ -90,14 +98,17 @@ async function main() {
             const buffer = await fileData.arrayBuffer();
             //reads the buffer
             const workbook = xlsx.read(buffer, { type: 'buffer' });
+            
             //reads the first sheet
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            
             //converts the rows in the sheet into json format, each object represents a row
             const rows = xlsx.utils.sheet_to_json(sheet);
-
+            
             console.log(`Transforming and Reshaping File: ${file.name} - Number of rows: ${rows.length}`);
             for (const row of rows) {
                 //checking for new PUS
+                row['Partner University'] = decodeHtmlEntities(row['Partner University']);
                 const pu = row['Partner University'];
                 if (pu && !knownPUs.includes(pu) && !newPUs.includes(pu)) {
                         newPUs.push(pu);
