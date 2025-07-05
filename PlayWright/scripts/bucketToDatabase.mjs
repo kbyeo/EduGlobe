@@ -108,7 +108,6 @@ async function main() {
             console.log(`Transforming and Reshaping File: ${file.name} - Number of rows: ${rows.length}`);
             for (const row of rows) {
                 //checking for new PUS
-                row['Partner University'] = decodeHtmlEntities(row['Partner University']);
                 const pu = row['Partner University'];
                 if (pu && !knownPUs.includes(pu) && !newPUs.includes(pu)) {
                         newPUs.push(pu);
@@ -116,20 +115,20 @@ async function main() {
             // Adjust type conversion for Supabase schema and appends all the rows to the allRows array
             allRows.push({
                     'faculty': row['Faculty'],
-                    'partner_university': row['Partner University'] || null,
-                    'pu_course_1': row['PU Course 1'] || null,
-                    'pu_course_1_title': row['PU Course 1 Title'] || null,
-                    'pu_crse1_units': Number(row['PU Crse1 Units']) || null,
-                    'pu_course_2': row['PU Course 2'] || null,
-                    'pu_course_2_title': row['PU Course 2 Title'] || null,
-                    'pu_crse2_units': Number(row['PU Crse2 Units']) || null,
-                    'nus_course_1': row['NUS Course 1'] || null,
-                    'nus_course_1_title': row['NUS Course 1 Title'] || null,
-                    'nus_crse1_units': Number(row['NUS Crse1 Units']) || null,
-                    'nus_course_2': row['NUS Course 2'] || null,
-                    'nus_course_2_title': row['NUS Course 2 Title'] || null,
-                    'nus_crse2_units': Number(row['NUS Crse2 Units']) || null,
-                    'pre_approved': row['Pre Approved?'] || null 
+                    'partner_university': decodeHtmlEntities(row['Partner University']) || null,
+                    'pu_course_1': decodeHtmlEntities(row['PU Course 1']) || null,
+                    'pu_course_1_title': decodeHtmlEntities(row['PU Course 1 Title']) || null,
+                    'pu_crse1_units': decodeHtmlEntities(Number(row['PU Crse1 Units'])) || null,
+                    'pu_course_2': decodeHtmlEntities(row['PU Course 2']) || null,
+                    'pu_course_2_title': decodeHtmlEntities(row['PU Course 2 Title']) || null,
+                    'pu_crse2_units': decodeHtmlEntities(Number(row['PU Crse2 Units'])) || null,
+                    'nus_course_1': decodeHtmlEntities(row['NUS Course 1']) || null,
+                    'nus_course_1_title': decodeHtmlEntities(row['NUS Course 1 Title']) || null,
+                    'nus_crse1_units': decodeHtmlEntities(Number(row['NUS Crse1 Units'])) || null,
+                    'nus_course_2': decodeHtmlEntities(row['NUS Course 2']) || null,
+                    'nus_course_2_title': decodeHtmlEntities(row['NUS Course 2 Title']) || null,
+                    'nus_crse2_units': decodeHtmlEntities(Number(row['NUS Crse2 Units'])) || null,
+                    'pre_approved': decodeHtmlEntities(row['Pre Approved?']) || null 
                 });
             }
         }
