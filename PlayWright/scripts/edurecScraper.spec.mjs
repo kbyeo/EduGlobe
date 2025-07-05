@@ -68,11 +68,11 @@ async function runScraper() {
   console.log("At login page: ", isLoginPage);
 
   if (isLoginPage) {
-    // Session expired or no cookie, write to file and exit early. 
+    // Session expired, write to file and exit early. 
 
     // uploads a txt alert file to supabase bucket
-    const content = 'Your edurecAuth.json cookie has expired. Please refresh session.';
-    const fileName = `alerts/COOKIE_EXPIRED_${timestamp}.txt`;
+    const content = 'Your edurecAuth.json session has expired. Please refresh session.';
+    const fileName = `${timestamp}/alerts/SESSION_EXPIRED.txt`;
     const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -82,14 +82,30 @@ async function runScraper() {
       });
     //checks if upload fails
     if (error) {
-      console.error('Failed to upload alert to Supabase:', error.message);
+      console.error('Failed to upload SESSION_EXPIRED to Supabase:', error.message);
     } else {
-      console.log('Alert uploaded to Supabase storage:', data.path);
+      console.log('SESSION_EXPIRED uploaded to Supabase storage:', data.path);
     }
        // stops execution of runScraper function
       await browser.close();
       return; 
-    }
+    } else {
+      const content = 'Your current edurecAuth.json session is still valid. :)';
+      const fileName = `${timestamp}/alerts/SESSION_ACTIVE.txt`;
+      const { data, error } = await supabase
+        .storage
+        .from('edurec-bucket')
+        .upload(fileName, content, {
+          contentType: 'text/plain',
+          upsert: true,
+        });
+      //checks if upload fails
+      if (error) {
+        console.error('Failed to upload SESSION_ACTIVE to Supabase:', error.message);
+      } else {
+        console.log('SESSION_ACTIVE uploaded to Supabase storage:', data.path);
+      }
+  }
   
   //Navigating to EduRec mappings page  
   await page.locator('#N_STDACAD_SHORTCUT').click();

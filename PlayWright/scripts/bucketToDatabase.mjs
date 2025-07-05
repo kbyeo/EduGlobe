@@ -141,8 +141,41 @@ async function main() {
             newPUs
         );
         console.log(`Inserted ${newPUs.length} new partner universities with placeholder country.`);
+
+        const content = newPUs.join('\n');
+        const fileName = `${timestamp}/alerts/NEW_PUs.txt`;
+        const { data, error } = await supabase
+            .storage
+            .from('edurec-bucket')
+            .upload(fileName, content, {
+            contentType: 'text/plain',
+            upsert: true,
+            });
+        //checks if upload fails
+        if (error) {
+            console.error('Failed to upload NEW_PUs to Supabase:', error.message);
+        } else {
+            console.log('NEW_PUs uploaded to Supabase storage:', data.path);
+        }
+        
         } else {
             console.log('no new PUs');
+
+            const content = newPUs.join('\n');
+            const fileName = `${timestamp}/alerts/NO_NEW_PUs.txt`;
+            const { data, error } = await supabase
+                .storage
+                .from('edurec-bucket')
+                .upload(fileName, content, {
+                contentType: 'text/plain',
+                upsert: true,
+                });
+            //checks if upload fails
+            if (error) {
+                console.error('Failed to upload NO_NEW_PUs to Supabase:', error.message);
+            } else {
+                console.log('NO_NEW_PUs uploaded to Supabase storage:', data.path);
+            }
         }
         await pgClient.query('COMMIT');
 
