@@ -47,9 +47,11 @@ async function main() {
         }
         
         //read content of text file. `data` is a Blob so we must convert it to string using .text()
+        
         const timestamp = await data.text();
+        console.log('Latest Scrape: ', timestamp)
         //create a path prefix using the content of the downloaded txt file
-        const folderPrefix = `${timestamp/scraped_mappings}/`;
+        const folderPrefix = `${timestamp}/scraped_mappings`;
 
         //gets the list of all the xls files in the edurec bucket's latest time stamp folder
         //files is an array
@@ -81,7 +83,7 @@ async function main() {
         for (const file of files) {
 
             //gets the path of each xls file 
-            const fullPath = `${folderPrefix}${file.name}`;
+            const fullPath = `${folderPrefix}/${file.name}`;
             //downloads each file from that bucket and folder
             const { data: fileData, error: downloadError } = await supabase
             .storage
