@@ -49,7 +49,7 @@ async function main() {
         //read content of text file. `data` is a Blob so we must convert it to string using .text()
         const timestamp = await data.text();
         //create a path prefix using the content of the downloaded txt file
-        const folderPrefix = `${timestamp}/`;
+        const folderPrefix = `${timestamp/scraped_mappings}/`;
 
         //gets the list of all the xls files in the edurec bucket's latest time stamp folder
         //files is an array
@@ -70,7 +70,7 @@ async function main() {
         CREATE TABLE IF NOT EXISTS edurec_mappings_staging (LIKE edurec_mappings INCLUDING ALL);
         `);
         await pgClient.query('TRUNCATE edurec_mappings_staging');
-        
+     
         //array for json data
         const allRows = [];
         const newPUs = [];

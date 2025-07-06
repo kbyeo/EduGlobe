@@ -172,7 +172,7 @@ async function runScraper() {
     const downloadPath = await download.path();
     console.log('getting download path')
 
-    const fileName = `${timestamp}/${faculty}.xls`;
+    const fileName = `${timestamp}/scraped_mappings/${faculty}.xls`;
     const fileBuffer = fs.readFileSync(downloadPath);
     //uploads each xls file into the bucket in the folder 'name'
     console.log('uploading to supabase bucket')
