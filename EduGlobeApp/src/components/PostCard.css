@@ -1,0 +1,123 @@
+
+.post-card {
+    height: 4rem;
+
+    background-color: #000000;
+    font-size: 1.1rem;
+    display: flex;
+
+    border-radius: 18px;
+    margin-right: 56px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    padding-top: 5px;
+
+}
+.postcard-intermediate-container {
+    display: flex;
+    flex-direction: row;
+
+    margin-top: 1.08rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+}
+.post-link {
+    color: #fafafa;
+    text-decoration: none;
+
+    width: 28rem;
+    margin-left: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* draws the “…” */
+    white-space: nowrap;
+
+}
+.post-metadata {
+    display: flex;
+    align-items: center;
+
+}
+.author-studies {
+
+    color: #a6a4f5;
+    width: 18rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-style: italic;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* draws the “…” */
+    white-space: nowrap;
+}
+
+.post-date {
+    color: #a6a4f5;
+
+    font-style: italic;
+    width: 8rem;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.post-author {
+    color: #fafafa;
+
+    width: 8rem;
+    text-align: center;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* draws the “…” */
+    white-space: nowrap;
+}
+.post-tag {
+    margin-right: 4px;
+
+}
+.post-karma {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0px 0px;
+    color: #b7b7b7;
+    font-variant-numeric: tabular-nums;
+    flex:0 0 3ch;
+}
+
+.karma-section{
+    margin-top: 3px;
+    display:inline-flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding:4px 8px;
+    margin-left: 5px;
+    margin-bottom: 0px;
+    background-color: #020023;
+    border-radius:9999px;
+
+
+
+
+}
+
+.karma-section .upvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 0px;
+    margin-right: 0px;
+
+
+}
+
+.karma-section .downvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 0px;
+    margin-right: 3px;
+
+
+}

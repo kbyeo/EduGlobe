@@ -37,7 +37,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
             .eq("pu_course", selectedRowData.pu_course_1)
             .order("aura", { ascending: false });
           if (isMounted) {
-            if (error) setError(error.message);
+            if (error) setReviewError(error.message);
             else       setReviews(data);
             setReviewLoading(false);
           }
@@ -57,7 +57,10 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
         const newReview = {
             pu_course: selectedRowData.pu_course_1,
             author: userProfile.user_display_name,
-            body: text.trim()
+            body: text.trim(),
+            author_year_of_study: userProfile.user_year_of_study,
+            author_course_of_study: userProfile.user_course_of_study,
+            author_avatar: userProfile.user_avatar
         };
         const tempId = Math.random().toString();
         setReviews(r => [{ ...newReview, id: tempId, created_at: new Date().toISOString() }, ...r]);
@@ -72,6 +75,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
             //rollback optimistic review
             setReviews(r => r.filter(rev => rev.id !== tempId));
             setReviewError(error.message);
+            setReviewLoading(false);
         } else {
             //replace temp with real row
             setReviews(
@@ -133,7 +137,7 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
 
 
                                 <div className="review-buttons">
-                                    <button className="cancel-review-button" onClick={handleReviewCancel}>Cancel</button>
+                                    <button type="button" className="cancel-review-button" onClick={handleReviewCancel}>Cancel</button>
                                     <button
                                         type="submit"
                                         className="submit-review-button"
@@ -151,11 +155,11 @@ function CourseDetails( { selectedRowData, selectedCourseDescription, onClose, u
                                 {reviews.map(r => (
                                     <li key={r.id} className="review-card">
 
-                                        <img src={userProfile.user_avatar || images.selected.profile}/>
+                                        <img src={r.author_avatar || images.selected.profile}/>
                                         <div className="review-text">
                                             <p className="review-meta">
                                                 <strong>{r.author}</strong>{" "}
-                                                <span className="review-date">· Year {userProfile.user_year_of_study} {userProfile.user_course_of_study} · {new Date(r.created_at).toLocaleDateString()}</span>
+                                                <span className="review-date">· Year {r.author_year_of_study} {r.author_course_of_study} · {new Date(r.created_at).toLocaleDateString()}</span>
                                             </p>
 
                                             <p className="review-body">{r.body}</p>

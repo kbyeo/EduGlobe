@@ -1,0 +1,49 @@
+.reply-aura-section{
+    margin-top: 1px;
+    display:inline-flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content:center;
+    padding:4px 8px;
+
+    margin-bottom: 4px;
+
+    background-color: #131313;
+    border-radius:9999px;
+    max-width: 78px;
+
+
+
+}
+
+.reply-aura-points {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0px 0px;
+    color: #b7b7b7;
+    font-variant-numeric: tabular-nums;
+    flex:0 0 3ch;
+}
+
+.reply-aura-section .reply-upvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 3px;
+    margin-right: 0px;
+
+}
+
+.reply-aura-section .reply-downvoting-image {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 1.3rem;
+    align-self: center;
+    margin-left: 0px;
+    margin-right: 3px;
+
+
+}

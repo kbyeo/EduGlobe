@@ -6,6 +6,8 @@ import ProfileCreation from "./components/ProfileCreation.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Discover from "./pages/Discover.jsx";
 import MyProfile from "./pages/MyProfile.jsx";
+import Forum from "./pages/Forum.jsx";
+import PostDetail from "./components/PostDetail.jsx";
 import supabaseClients from "./supabaseClient";
 // Destructure the instances
 const { supabase, mappings } = supabaseClients;
@@ -16,30 +18,30 @@ function App() {
     const [session, setSession] = useState(null);
     const [firstSignin, setFirstSignin] = useState(true);
 
-  // Check session on load and listen for changes
+  //check session on load and listen for changes
   useEffect(() => {
-    // Check for an existing session upon component load
+    //check for an existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
-        setId(session.user.id); // Set the user ID
+        setId(session.user.id);
         console.log(`Existing session found. User ID: ${session.user.id}`);
       }
     });
-    // Listen for authentication state changes
+    //listen for authentication state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session) {
-        setId(session.user.id); // Update the user ID
+        setId(session.user.id);
         console.log(`Authentication state changed. User ID: ${session.user.id} signed in`);
       } else {
-        setId(null); // Clear the user ID if logged out
+        setId(null); //clear the user ID if logged out
         console.log("User signed out.");
       }
     });
-    // Cleanup the subscription on unmount
+    //cleanup the subscription on unmount
     return () => {
         console.log("unsubscribing from auth");
         subscription.unsubscribe();
@@ -78,6 +80,8 @@ function App() {
                        <Route path="/profile" element={<ProfileCreation userId={id} />} />
                        <Route path="/discover" element={<Discover id={id} setId={setId} />} />
                        <Route path="/myprofile" element={<MyProfile id={id} setId={setId} />} />
+                       <Route path="/forum" element={<Forum id={id} setId={setId} />} />
+                       <Route path="/forum/:id" element={<PostDetail userId={id} setUserId={setId} />} />
 
                      </Routes>
                    </Router>

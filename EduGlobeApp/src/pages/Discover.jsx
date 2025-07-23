@@ -315,7 +315,7 @@ function Discover({ id, setId }) {
                                 Discover
                         </li>
 
-                        <li>
+                        <li onClick={() => navigate('/forum')}>
                             <img src={images.unselected.forum} alt="forum logo" />
                                 Forum
                         </li>

@@ -251,10 +251,10 @@
 }
 
 .filter-icon{
-  height: 45px;
+  height: 43px;
   margin-top: 12px;
   margin-left: 5px;
-  flex-align: right;
+  margin-right: 5px;
 }
 
 .filter-icon:hover{
@@ -294,7 +294,6 @@
   width: 100%;
   overflow-x: auto; /* Allow horizontal scrolling on smaller screens */
   margin-bottom: 10px;
-  border: 1px solid #6a39ce;
 
 }
 
@@ -304,8 +303,6 @@
   margin: 0 auto;
   font-family: 'Poppins', sans-serif;
   table-layout: fixed;
-
-
 }
 
 .results-table th:nth-child(1),
@@ -378,6 +375,24 @@
 }
 .results-table td {
   color: #f8f8ff;
+}
+
+.results-table-container::-webkit-scrollbar {
+  width: 10px;              /* vertical bar */
+  height: 10px;             /* horizontal bar */
+}
+.results-table-container::-webkit-scrollbar-track {
+  background: #000000;      /* track (rail) */
+  border-radius: 6px;
+}
+.results-table-container::-webkit-scrollbar-thumb {
+  background: #6a39ce;      /* draggable “thumb” */
+  border-radius: 6px;
+  border: 2px solid #000000;/* creates a gap around thumb */
+  transition: background 0.5s;
+}
+.results-table-container::-webkit-scrollbar-thumb:hover {
+  background: #8c52ff;      /* hover colour */
 }
 
 .pagination-controls {

@@ -6,6 +6,7 @@ import searchIcon from './search-icon.png';
 import msgIcon from './msg-icon.png';
 import heartIcon from './heart-icon.png';
 import reviewIcon from "./review-icon.png";
+import forumEmptyIcon from "./forum-empty-icon.png";
 
 import dashboardSelected from './dashboard-selected.png';
 import discoverSelected from './discover-selected.png';
@@ -42,6 +43,7 @@ export default {
     heartIcon,
     filterIcon,
     reviewIcon,
+    forumEmptyIcon,
   },
 
   selected: {
