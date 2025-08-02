@@ -39,7 +39,7 @@ async function main() {
         const { data, error } = await supabase
         .storage
         .from('edurec-bucket')
-        .download('latest_update_timestamp.txt');
+        .download('latest_scrape_timestamp.txt');
         //if download error
         if (error) {
         console.error('Error downloading timestamp file:', error.message);
@@ -62,7 +62,7 @@ async function main() {
         //if folder is empty or fails
         if (listerror) throw listerror;
         if (!files || files.length === 0) {
-            console.log('No files found.');
+            console.log('No files found. Session probably expired.');
             return;
         }
         
@@ -163,7 +163,7 @@ async function main() {
         } else {
             console.log('no new PUs');
 
-            const content = newPUs.join('\n');
+            const content = "NIL";
             const fileName = `${timestamp}/alerts/NO_NEW_PUs.txt`;
             const { data, error } = await supabase
                 .storage

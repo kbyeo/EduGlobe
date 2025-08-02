@@ -35,6 +35,26 @@ console.log(timestamp); // e.g. "2025-07-05_22-42-11"
 
 //function to login and go to mappings page
 async function runScraper() {
+
+  //uploads the timestamp of when the scraper last ran into the bucket as a txt file
+  const latest_scrape_timestamp = `latest_scrape_timestamp.txt`;
+  console.log('uploading latest timestamp')
+  const { data, error } = await supabase
+      .storage
+      .from('edurec-bucket')
+      .upload(latest_scrape_timestamp, timestamp, {
+        contentType: 'text/plain',
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Failed to upload alert to Supabase:', error.message);
+    } else {
+      console.log('Alert uploaded to Supabase storage:', data.path);
+    }
+
+
+
   //launches browswer and saves it as browser to use as a handle later
   const browser = await chromium.launch({ headless: true });
   //creates a new isolated browser environment
@@ -71,8 +91,8 @@ async function runScraper() {
     // Session expired, write to file and exit early. 
 
     // uploads a txt alert file to supabase bucket
-    const content = 'Your edurecAuth.json session has expired. Please refresh session.';
-    const fileName = `${timestamp}/alerts/SESSION_EXPIRED.txt`;
+    const content = 'Expired';
+    const fileName = `${timestamp}/alerts/SESSION_STATUS.txt`;
     const { data, error } = await supabase
       .storage
       .from('edurec-bucket')
@@ -86,12 +106,12 @@ async function runScraper() {
     } else {
       console.log('SESSION_EXPIRED uploaded to Supabase storage:', data.path);
     }
-       // stops execution of runScraper function
-      await browser.close();
-      return; 
+    // stops execution of runScraper function
+    await browser.close()
+    return timestamp.split('_')[0];
     } else {
-      const content = 'Your current edurecAuth.json session is still valid. :)';
-      const fileName = `${timestamp}/alerts/SESSION_ACTIVE.txt`;
+      const content = 'Active';
+      const fileName = `${timestamp}/alerts/SESSION_STATUS.txt`;
       const { data, error } = await supabase
         .storage
         .from('edurec-bucket')
@@ -216,7 +236,7 @@ async function runScraper() {
 
   await browser.close();
   console.log('finished scraping and uploading')
-
+/*
   //uploads the timestamp of when the scraper last ran into the bucket as a txt file
   const latest_update_timestamp = `latest_update_timestamp.txt`;
   console.log('uploading latest timestamp')
@@ -233,7 +253,7 @@ async function runScraper() {
     } else {
       console.log('Alert uploaded to Supabase storage:', data.path);
     }
-
+*/
   const end = Date.now();
   //get how long the script ran for
   const durationSeconds = ((end - start) / 1000).toFixed(2);
@@ -241,7 +261,8 @@ async function runScraper() {
 
   // Returns the date for the output 
   return timestamp.split('_')[0];
-}
+} 
+
 
 // Run the scraper if this file is called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
