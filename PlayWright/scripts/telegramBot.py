@@ -105,7 +105,7 @@ def get_pu_status(timestamp):
                 return result.decode('utf-8')
         except Exception as e:
             # Optional: log which one failed
-            print(f"Could not find {file_path}: {e}")
+            print(f"Could not find {file_path}: {e}, trying next file..")
             continue
     else:
         return "No PU status text files found."
@@ -118,7 +118,7 @@ async def main():
     timestamp = get_timestamp_file_contents()
     session_status = get_latest_session_status(timestamp)
 
-    PU_STATUS = get_pu_status(timestamp) if session_status.strip().lower() == "active" else "Unknown"
+    PU_STATUS = get_pu_status(timestamp) if session_status.strip().lower() == "active" else "Unknown (Session Expired)"
 
 
     message = f"{report}\nSession: {session_status}\nNew PUs: {PU_STATUS}"

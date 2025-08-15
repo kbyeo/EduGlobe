@@ -1,0 +1,35 @@
+name: Run Telegram Bot
+
+on:
+  schedule:
+    - cron: '30 21 * * *'  # Runs daily at 21:30 UTC = 5:30 AM SGT next day
+
+jobs:
+  run-telegram-bot:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OWNER: ${{ secrets.GITHUB_OWNER }}
+      GITHUB_REPO: ${{ secrets.GITHUB_REPO }}
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+      SUPABASE_PROJECT_KEY: ${{ secrets.SUPABASE_PROJECT_KEY }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run telegrambot.py
+        run: python telegrambot.py
