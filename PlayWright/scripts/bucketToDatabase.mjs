@@ -22,6 +22,7 @@ const pgClient = new Client({
   connectionString: process.env.SUPABASE_DATABASE_URL, 
 });
 
+
 function decodeHtmlEntities(text) {
   if (typeof text === 'string') {
     return he.decode(text);
@@ -33,6 +34,7 @@ function decodeHtmlEntities(text) {
 async function main() {
     //new
     try {
+        
         await pgClient.connect();
 
         //download the latest timestamp text file
@@ -237,14 +239,14 @@ async function main() {
         await pgClient.query('COMMIT');
         console.log('Table swap successful');
 
-        await pgClient.query(`
+        /*await pgClient.query(`
         ALTER TABLE edurec_mappings
         ADD CONSTRAINT fk_partner_university
         FOREIGN KEY (partner_university)
         REFERENCES country(partner_university)
         ON DELETE SET NULL;
-        `);
-        console.log('foreign key added successfully');
+        `); 
+        console.log('foreign key added successfully');*/
 
         await pgClient.query(`
           CREATE VIEW edurec_mappings_with_country_view AS

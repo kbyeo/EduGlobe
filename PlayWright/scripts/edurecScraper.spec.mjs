@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 
 dotenv.config({ path: './PlayWright/eduglobe.env' });
+console.log('Supabase URL:', process.env.SUPABASE_PROJECT_URL)
 
 //supabase auth
 const supabaseUrl = process.env.SUPABASE_PROJECT_URL;
