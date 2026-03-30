@@ -22,6 +22,7 @@ const pgClient = new Client({
   connectionString: process.env.SUPABASE_DATABASE_URL, 
 });
 
+
 function decodeHtmlEntities(text) {
   if (typeof text === 'string') {
     return he.decode(text);
@@ -33,13 +34,14 @@ function decodeHtmlEntities(text) {
 async function main() {
     //new
     try {
+        
         await pgClient.connect();
 
         //download the latest timestamp text file
         const { data, error } = await supabase
         .storage
         .from('edurec-bucket')
-        .download('latest_update_timestamp.txt');
+        .download('latest_scrape_timestamp.txt');
         //if download error
         if (error) {
         console.error('Error downloading timestamp file:', error.message);
@@ -62,7 +64,7 @@ async function main() {
         //if folder is empty or fails
         if (listerror) throw listerror;
         if (!files || files.length === 0) {
-            console.log('No files found.');
+            console.log('No files found. Session probably expired.');
             return;
         }
         
@@ -163,7 +165,7 @@ async function main() {
         } else {
             console.log('no new PUs');
 
-            const content = newPUs.join('\n');
+            const content = "NIL";
             const fileName = `${timestamp}/alerts/NO_NEW_PUs.txt`;
             const { data, error } = await supabase
                 .storage
@@ -237,14 +239,14 @@ async function main() {
         await pgClient.query('COMMIT');
         console.log('Table swap successful');
 
-        await pgClient.query(`
+        /*await pgClient.query(`
         ALTER TABLE edurec_mappings
         ADD CONSTRAINT fk_partner_university
         FOREIGN KEY (partner_university)
         REFERENCES country(partner_university)
         ON DELETE SET NULL;
-        `);
-        console.log('foreign key added successfully');
+        `); 
+        console.log('foreign key added successfully');*/
 
         await pgClient.query(`
           CREATE VIEW edurec_mappings_with_country_view AS
